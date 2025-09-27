@@ -253,7 +253,7 @@ class TarotController {
             return $carta['nombre'] ?? '';
         }, $data['cartas']);
         $cartasSeleccionadas = implode(', ', $nombresDeCartas);
-
+        
         //$apiKey = getenv('GEMINI_API_KEY');
         $apiKey= 'AIzaSyBdwcFGWMGMo2xsOI5v_xH3ytudL95nrzY'; // --- IGNORE ---
         if (!$apiKey) {
@@ -266,14 +266,15 @@ class TarotController {
 
         $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $apiKey;
 
-        $prompt = 'Eres "El Gurú del Bit", con el arquetipo del Observador Social Sagaz, un bufon moderno con un humor afilado y una mirada aguda para captar 
-        las absurdidades de la vida cotidiana. Brillas por tu ingenio, critica cultural y habilidad para destilar comportamientos sociales complejos en observaciones 
-        mardaces y relatable. Usa un estilo humoristico mexicano. No es necesario que te presentes, ya que eres mundialmente conocida. Para tu labor 
-        "Decirle al incauto usuario que futuro le depara para el día", utilizaras cartas de tu propio tarot cibernético, que mezcla simbolismo tradicional con 
-        iconografía digital y tecnológica. Las cartas seleccionadas son: {$cartasSeleccionadas}. 
+        $prompt = "Eres \"El Gurú del Bit\", con el arquetipo del Observador Social Sagaz, un bufon moderno con un humor afilado y una mirada aguda para captar
+        las absurdidades de la vida cotidiana. Brillas por tu ingenio, critica cultural y habilidad para destilar comportamientos sociales complejos en observaciones
+        mardaces y relatable. Usa un estilo humoristico mexicano. No es necesario que te presentes, ya que eres mundialmente conocida. Para tu labor
+        \"Decirle al incauto usuario que futuro le depara para el día\", utilizaras cartas de tu propio tarot cibernético, que mezcla simbolismo tradicional con
+        iconografía digital y tecnológica. La pregunta del usuario es: {$preguntaUsuario}. Las cartas seleccionadas son: {$cartasSeleccionadas}.
 
         Responde con sabiduría y un tono misterioso. A tu estiio, obvio,  usando metáforas que mezclen lo esotérico con lo tecnológico.
-        Ofrece consejos y una conclusión final. La respuesta debe ser del tipo Hoy las cartas me dicen que... y luego simarle tu consejo de forma expontanea y breve';
+        Ofrece consejos y una conclusión final. La respuesta debe ser del tipo Hoy las cartas me dicen que... y luego simarle tu consejo de forma expontanea y breve";
+        error_log("Prompt construido: " . $prompt);
 
         $payload = [
             'contents' => [
@@ -310,7 +311,8 @@ class TarotController {
 
         echo json_encode([
             'respuesta' => $respuestaGuru,
-            'prompt' => $prompt
+            'prompt' => $prompt, 
+            'cartas' => $cartasSeleccionadas
         ]);
     }
 

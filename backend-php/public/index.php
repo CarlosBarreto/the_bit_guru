@@ -19,7 +19,7 @@ require_once __DIR__ . '/../app/Controllers/TarotController.php';
 // Router mejorado para funcionar en subdirectorios
 $request_uri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
 
-$api_marker = 'api/';
+$api_marker = 'guru-api/';
 $api_pos = strpos($request_uri, $api_marker);
 
 if ($api_pos === false) {

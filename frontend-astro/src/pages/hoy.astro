@@ -141,6 +141,8 @@ import Layout from '../layouts/Layout.astro';
 			currentCards = await getTarotReading(2);
 			cardsContainer.innerHTML = ''; // Limpiar
 			
+			//alert(currentCards);
+
 			currentCards.forEach(cardData => {
 				const cardDiv = document.createElement('div');
 				cardDiv.className = 'card';
@@ -150,19 +152,21 @@ import Layout from '../layouts/Layout.astro';
 		}
 
 		askButton.addEventListener('click', async () => {
+
+
             // Mostrar estado de carga
             askButton.disabled = true;
             askButton.textContent = 'Consultando...';
             responseContainer.style.display = 'none';
             guruResponseEl.classList.remove('visible');
             
-			await displayInitialCards();
+			//await displayInitialCards();
 
             guruResponseEl.textContent = 'El Gurú está sintonizando con el cosmos...';
             responseContainer.style.display = 'block';
             guruResponseEl.classList.add('visible');
 
-
+			alert(currentCards);
 			const apiResponse = await getReading("¿cómo me irá hoy?", currentCards);
 
             // Mostrar respuesta y prompt
@@ -181,5 +185,8 @@ import Layout from '../layouts/Layout.astro';
                 askButton.textContent = '¿Cómo me irá hoy?';
             }, 500); // Pequeño delay para la transición
 		});
+
+		// Cargar las cartas iniciales al cargar la página
+		displayInitialCards();
 	});
 </script>
