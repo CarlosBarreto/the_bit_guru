@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Quejas - Gurú de Bits">
+	<main class="container">
+		<h1>Queja Generada</h1>
+		<div class="card">
+			<p>Estoy sobrecargado de trabajo y responsabilidades. Ser un adulto funcional es una trampa, exijo mi derecho a procrastinar y a comer pizza en la cama.</p>
+		</div>
+		<a href="/" class="cta-button">Volver</a>
+	</main>
+</Layout>
+
+<style>
+	main {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		min-height: 80vh;
+	}
+	h1 {
+		font-size: 2.5rem;
+		font-weight: 700;
+		color: #c084fc;
+		margin-bottom: 1.5rem;
+	}
+	.card {
+		background-color: #2a2a2a;
+		padding: 2rem;
+		border-radius: 8px;
+		margin-bottom: 2rem;
+		max-width: 600px;
+	}
+	p {
+		font-size: 1.2rem;
+		color: #e0e0e0;
+		line-height: 1.6;
+	}
+	.cta-button {
+        background-color: #9333ea; /* Morado */
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+    .cta-button:hover {
+        background-color: #a855f7; /* Morado más claro */
+    }
+</style>
