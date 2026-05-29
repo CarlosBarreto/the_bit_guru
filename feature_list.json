@@ -34,7 +34,7 @@
         "tests/lib/tarot.test.ts valida longitud 22 y unicidad de nombres",
         "Ningún módulo importa nada de HTTP/Astro/Gemini"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 3,
