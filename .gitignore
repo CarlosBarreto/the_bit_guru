@@ -6,6 +6,11 @@ frontend-astro/dist/
 legacy/backend-php/vendor/
 legacy/backend-php/.env
 
+# Secrets locales (MCPs, integraciones)
+.env
+.env.local
+.harness_init.log
+
 # Archivos de sistema operativo
 .DS_Store
 Thumbs.db
