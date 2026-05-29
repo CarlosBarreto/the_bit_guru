@@ -47,7 +47,7 @@
         "tests/lib/gemini.test.ts mockea el SDK con vi.mock y valida parámetros pasados",
         "Ningún otro archivo del proyecto importa directamente @google/genai"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 4,

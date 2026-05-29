@@ -31,3 +31,10 @@ Plantilla de entrada (copiar al cerrar sesión):
 - **Resumen:** Capa de dominio pura: `lib/persona.ts` (exporta `PERSONA_BASE` + `buildSystemPrompt(opts)`, derivado de PERSONA.md con género masculino y tono cómplice cínico) y `lib/tarot.ts` (constante `ARCANOS` con los 22 arcanos cibernéticos, idénticos carácter por carácter al canon del PHP en `legacy/`). Cero imports de HTTP/Astro/Gemini. `.\init.ps1` verde: 3 test files, 11 tests passing. Aprobado por reviewer.
 - **Archivos tocados:** `frontend-astro/src/lib/persona.ts`, `frontend-astro/src/lib/tarot.ts`, `frontend-astro/tests/lib/persona.test.ts`, `frontend-astro/tests/lib/tarot.test.ts`.
 - **Notas para la próxima sesión:** La siguiente feature pending es la 3 `lib_gemini_wrapper` (wrapper único de Gemini en `lib/gemini.ts`, mockeable desde tests, lee API key de `import.meta.env.GEMINI_API_KEY`). Deuda heredada de feature 1 aún abierta (lint en scaffold preexistente).
+
+## 2026-05-29 — feature 3 lib_gemini_wrapper
+
+- **Veredicto:** done
+- **Resumen:** Wrapper único de Gemini en `lib/gemini.ts`: `generate(prompt, opts)` encapsula el SDK `@google/genai` (`GoogleGenAI` → `models.generateContent`), lee la key solo de `import.meta.env.GEMINI_API_KEY` (error descriptivo si falta, antes de instanciar el SDK) y soporta opts model/systemInstruction/temperature/maxOutputTokens. SDK mockeado con `vi.mock()`; ningún otro archivo de src importa el SDK. `.\init.ps1` verde: 4 test files, 21 tests passing (10 nuevos). Aprobado por reviewer.
+- **Archivos tocados:** `frontend-astro/src/lib/gemini.ts`, `frontend-astro/tests/lib/gemini.test.ts`.
+- **Notas para la próxima sesión:** La siguiente feature pending es la 4 `endpoint_morpheus_quotes` (GET `/api/morpheus-quotes`: array fijo de frases tipo Morpheus, sin Gemini; primer smoke del setup Vercel). Deuda heredada de feature 1 aún abierta (lint en scaffold preexistente).
