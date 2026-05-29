@@ -2,9 +2,9 @@
 frontend-astro/node_modules/
 frontend-astro/dist/
 
-# Ignorar dependencias y archivos sensibles del backend
-backend-php/vendor/
-backend-php/.env
+# Ignorar dependencias y archivos sensibles del backend (legacy PHP)
+legacy/backend-php/vendor/
+legacy/backend-php/.env
 
 # Archivos de sistema operativo
 .DS_Store
