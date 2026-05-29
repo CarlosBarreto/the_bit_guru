@@ -107,9 +107,37 @@ export async function getFanResponse(fanName, fanMessage) {
         return data;
     } catch (error) {
         console.error("Error al generar la respuesta para el fan:", error);
-        return { 
+        return {
             error: "El Gurú está meditando y no puede responder ahora.",
             prompt: "No se pudo generar un prompt debido a un error de conexión."
         };
+    }
+}
+
+/**
+ * Obtiene las citas de Morpheus para el efecto de máquina de escribir.
+ * @returns {Promise<string[]>} Un arreglo con las citas de Morpheus.
+ */
+export async function getMorpheusQuotes() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/guru/morpheus-quotes`);
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Error al obtener las citas de Morpheus:", error);
+        // Devuelve las citas por defecto en caso de error
+        return [
+            "La Matrix está en todas partes. Nos rodea. Incluso ahora, en esta misma habitación.",
+            "Es el mundo que ha sido puesto ante tus ojos para cegarte de la verdad.",
+            "Es un mundo de ensueño generado por computadora, construido para mantenernos bajo control.",
+            "Es tu última oportunidad. Después de esto, no hay vuelta atrás.",
+            "Tomas la pastilla azul, la historia termina, te despiertas en tu cama y crees lo que quieras creer.",
+            "Tomas la pastilla roja, te quedas en el País de las Maravillas y te muestro cuán profundo es el agujero del conejo.",
+            "Recuerda... todo lo que te ofrezco es la verdad. Nada más.",
+            "Estoy intentando liberar tu mente, Neo. Pero solo puedo mostrarte la puerta. Tú eres quien tiene que atravesarla."
+        ];
     }
 }

@@ -65,6 +65,11 @@ switch ($route) {
             $controller->fanResponse();
         }
         break;
+    case 'guru/morpheus-quotes':
+        if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            $controller->morpheusQuotes();
+        }
+        break;
     default:
         header("HTTP/1.0 404 Not Found");
         echo json_encode(['error' => 'Endpoint no encontrado']);
