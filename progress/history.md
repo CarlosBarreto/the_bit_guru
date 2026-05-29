@@ -38,3 +38,17 @@ Plantilla de entrada (copiar al cerrar sesión):
 - **Resumen:** Wrapper único de Gemini en `lib/gemini.ts`: `generate(prompt, opts)` encapsula el SDK `@google/genai` (`GoogleGenAI` → `models.generateContent`), lee la key solo de `import.meta.env.GEMINI_API_KEY` (error descriptivo si falta, antes de instanciar el SDK) y soporta opts model/systemInstruction/temperature/maxOutputTokens. SDK mockeado con `vi.mock()`; ningún otro archivo de src importa el SDK. `.\init.ps1` verde: 4 test files, 21 tests passing (10 nuevos). Aprobado por reviewer.
 - **Archivos tocados:** `frontend-astro/src/lib/gemini.ts`, `frontend-astro/tests/lib/gemini.test.ts`.
 - **Notas para la próxima sesión:** La siguiente feature pending es la 4 `endpoint_morpheus_quotes` (GET `/api/morpheus-quotes`: array fijo de frases tipo Morpheus, sin Gemini; primer smoke del setup Vercel). Deuda heredada de feature 1 aún abierta (lint en scaffold preexistente).
+
+## 2026-05-29 — feature 4 endpoint_morpheus_quotes
+
+- **Veredicto:** done (smoke curl del dueño pendiente — no bloqueante)
+- **Resumen:** Endpoint estático `GET /api/morpheus-quotes` (`export const GET: APIRoute`, try/catch, `Response` 200 `application/json`) que devuelve `MORPHEUS_QUOTES`, las 8 frases tipo Morpheus copiadas byte-a-byte del canon PHP (`TarotController.php::morpheusQuotes()`). Sin Gemini, sin `lib/`. `.\init.ps1` verde: 5 test files, 24 tests passing. Aprobado por reviewer.
+- **Archivos tocados:** `frontend-astro/src/pages/api/morpheus-quotes.ts`, `frontend-astro/tests/pages/api/morpheus-quotes.test.ts`.
+- **Pendiente de dueño:** smoke con curl. Comando exacto del informe del implementer:
+  ```powershell
+  npm run dev --prefix frontend-astro
+  # en otra terminal:
+  curl http://localhost:4321/api/morpheus-quotes
+  ```
+  Esperado: HTTP 200, `Content-Type: application/json`, array JSON de 8 strings empezando por "La Matrix está en todas partes...".
+- **Notas para la próxima sesión:** La siguiente feature pending es la 5 `endpoint_tirada` (GET `/api/tirada`: selecciona 3 arcanos al azar sin reemplazo de `lib/tarot.ts`; solo lógica de dominio, sin Gemini). Deuda heredada de feature 1 aún abierta (lint en scaffold preexistente).

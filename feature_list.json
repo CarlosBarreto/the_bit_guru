@@ -60,7 +60,7 @@
         "tests/pages/api/morpheus-quotes.test.ts valida shape y status",
         "Smoke local con curl confirmado por el dueño"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 5,
