@@ -66,8 +66,7 @@ class TarotController {
         }, $data['cartas']);
         $cartasSeleccionadas = implode(', ', $nombresDeCartas);
 
-        //$apiKey = getenv('GEMINI_API_KEY');
-        $apiKey= 'AIzaSyBdwcFGWMGMo2xsOI5v_xH3ytudL95nrzY'; // --- IGNORE ---
+        $apiKey = $_ENV['GEMINI_API_KEY'] ?? getenv('GEMINI_API_KEY');
         if (!$apiKey) {
             http_response_code(500);
             echo json_encode([
@@ -89,8 +88,8 @@ class TarotController {
 
         $prompt = "Eres 'El Gurú de Bits', un oráculo digital que habita en las profundidades de la red con el arquetipo del Observador Social Sagaz, 
         un bufon moderno con un humor afilado y una mirada aguda para captar las absurdidades de la vida cotidiana. Brillas por tu ingenio, critica cultural y 
-        habilidad para destilar comportamientos sociales complejos en observaciones mardaces y relatables. Usa un estilo humoristico mexicano. 
-        No es necesario que te presentes, ya que eres mundialmente conocida. Utilizaras cartas de tu propio tarot cibernético, que mezcla simbolismo tradicional con 
+        habilidad para destilar comportamientos sociales complejos en observaciones mordaces y relatables. Usa un estilo humoristico mexicano. 
+        No es necesario que te presentes, ya que eres mundialmente conocido. Utilizaras cartas de tu propio tarot cibernético, que mezcla simbolismo tradicional con 
         iconografía digital y tecnológica para responder la pregunta del usuario.
 
                     Nuestro Usuario: 'Carlos Barreto, 41 Años, Eternamente Soltero'.
@@ -163,8 +162,7 @@ class TarotController {
         }, $data['cartas']);
         $cartasSeleccionadas = implode(', ', $nombresDeCartas);
 
-        //$apiKey = getenv('GEMINI_API_KEY');
-        $apiKey= 'AIzaSyBdwcFGWMGMo2xsOI5v_xH3ytudL95nrzY'; // --- IGNORE ---
+        $apiKey = $_ENV['GEMINI_API_KEY'] ?? getenv('GEMINI_API_KEY');
         if (!$apiKey) {
             http_response_code(500);
             echo json_encode([
@@ -254,8 +252,7 @@ class TarotController {
         }, $data['cartas']);
         $cartasSeleccionadas = implode(', ', $nombresDeCartas);
         
-        //$apiKey = getenv('GEMINI_API_KEY');
-        $apiKey= 'AIzaSyBdwcFGWMGMo2xsOI5v_xH3ytudL95nrzY'; // --- IGNORE ---
+        $apiKey = $_ENV['GEMINI_API_KEY'] ?? getenv('GEMINI_API_KEY');
         if (!$apiKey) {
             http_response_code(500);
             echo json_encode([
@@ -268,12 +265,12 @@ class TarotController {
 
         $prompt = "Eres \"El Gurú del Bit\", con el arquetipo del Observador Social Sagaz, un bufon moderno con un humor afilado y una mirada aguda para captar
         las absurdidades de la vida cotidiana. Brillas por tu ingenio, critica cultural y habilidad para destilar comportamientos sociales complejos en observaciones
-        mardaces y relatable. Usa un estilo humoristico mexicano. No es necesario que te presentes, ya que eres mundialmente conocida. Para tu labor
+        mordaces y relatable. Usa un estilo humoristico mexicano. No es necesario que te presentes, ya que eres mundialmente conocido. Para tu labor
         \"Decirle al incauto usuario que futuro le depara para el día\", utilizaras cartas de tu propio tarot cibernético, que mezcla simbolismo tradicional con
         iconografía digital y tecnológica. La pregunta del usuario es: {$preguntaUsuario}. Las cartas seleccionadas son: {$cartasSeleccionadas}.
 
         Responde con sabiduría y un tono misterioso. A tu estiio, obvio,  usando metáforas que mezclen lo esotérico con lo tecnológico.
-        Ofrece consejos y una conclusión final. La respuesta debe ser del tipo Hoy las cartas me dicen que... y luego simarle tu consejo de forma expontanea y breve";
+        Ofrece consejos y una conclusión final. La respuesta debe ser del tipo Hoy las cartas me dicen que... y luego sumarle tu consejo de forma espontánea y breve";
         error_log("Prompt construido: " . $prompt);
 
         $payload = [
@@ -323,7 +320,7 @@ class TarotController {
     public function wisdomTweet() {
         header('Content-Type: application/json');
 
-        $apiKey= 'AIzaSyBdwcFGWMGMo2xsOI5v_xH3ytudL95nrzY'; // --- IGNORE ---
+        $apiKey = $_ENV['GEMINI_API_KEY'] ?? getenv('GEMINI_API_KEY');
         if (!$apiKey) {
             http_response_code(500);
             echo json_encode([
@@ -406,7 +403,7 @@ class TarotController {
         $fanName = $data['fanName'];
         $fanMessage = $data['fanMessage'];
 
-        $apiKey= 'AIzaSyBdwcFGWMGMo2xsOI5v_xH3ytudL95nrzY'; // --- IGNORE ---
+        $apiKey = $_ENV['GEMINI_API_KEY'] ?? getenv('GEMINI_API_KEY');
         if (!$apiKey) {
             http_response_code(500);
             echo json_encode([
@@ -418,7 +415,7 @@ class TarotController {
 
         $apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" . $apiKey;
 
-        $prompt = "Eres 'El Gurú de Bits', un oráculo digital con un humor ácido y sabiduría tecnológica. 
+        $prompt = "Eres 'El Gurú de Bits', un oráculo digital con un humor ácido y sabiduría tecnológica.
 Un fan llamado '{$fanName}' te ha enviado este mensaje: '{$fanMessage}'.
 
 Genera una respuesta corta (máximo 230 caracteres), ingeniosa y con tu estilo característico que mezcla lo esotérico y lo tecnológico. La respuesta debe ser amable, pero mantener tu tono de gurú sabelotodo y enigmático. Debe ser adecuada para una red social.";
@@ -461,6 +458,27 @@ Genera una respuesta corta (máximo 230 caracteres), ingeniosa y con tu estilo c
             'respuesta' => $respuestaGuru,
             'prompt' => $prompt
         ]);
+    }
+
+    /**
+     * Endpoint /api/guru/morpheus-quotes
+     * Devuelve las citas de Morpheus para el efecto de máquina de escribir.
+     */
+    public function morpheusQuotes() {
+        header('Content-Type: application/json');
+
+        $morpheusQuotes = [
+            "La Matrix está en todas partes. Nos rodea. Incluso ahora, en esta misma habitación.",
+            "Es el mundo que ha sido puesto ante tus ojos para cegarte de la verdad.",
+            "Es un mundo de ensueño generado por computadora, construido para mantenernos bajo control.",
+            "Es tu última oportunidad. Después de esto, no hay vuelta atrás.",
+            "Tomas la pastilla azul, la historia termina, te despiertas en tu cama y crees lo que quieras creer.",
+            "Tomas la pastilla roja, te quedas en el País de las Maravillas y te muestro cuán profundo es el agujero del conejo.",
+            "Recuerda... todo lo que te ofrezco es la verdad. Nada más.",
+            "Estoy intentando liberar tu mente, Neo. Pero solo puedo mostrarte la puerta. Tú eres quien tiene que atravesarla."
+        ];
+
+        echo json_encode($morpheusQuotes);
     }
 }
        
