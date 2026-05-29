@@ -6,5 +6,165 @@
     "require_tests_to_close": true,
     "valid_status": ["pending", "in_progress", "done", "blocked"]
   },
-  "features": []
+  "features": [
+    {
+      "id": 1,
+      "name": "setup_astro_unified",
+      "title": "Setup base Astro unified + Vitest + adapter Vercel",
+      "description": "Habilitar Astro en modo SSR con @astrojs/vercel, instalar @google/genai y vitest, configurar tsconfig y scripts npm. Sin endpoints todavía.",
+      "acceptance": [
+        "frontend-astro/astro.config.mjs declara output: 'server' + @astrojs/vercel",
+        "frontend-astro/package.json incluye dev/build/preview/test/lint",
+        "npm install --prefix frontend-astro termina sin errores",
+        "npm run build --prefix frontend-astro genera el output sin endpoints",
+        "Existe frontend-astro/tests/smoke.test.ts con un test trivial que pasa",
+        "init.ps1 termina verde"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 2,
+      "name": "lib_persona_and_tarot",
+      "title": "Capa de dominio: lib/persona.ts y lib/tarot.ts",
+      "description": "Mover el prompt-base del Gurú a un módulo único derivado de PERSONA.md y declarar los 22 arcanos cibernéticos como constante canónica (idéntica a la del PHP en legacy/).",
+      "acceptance": [
+        "frontend-astro/src/lib/persona.ts exporta PERSONA_BASE (string) y buildSystemPrompt(opts)",
+        "frontend-astro/src/lib/tarot.ts exporta ARCANOS (22 elementos, nombres idénticos al canon)",
+        "tests/lib/persona.test.ts valida que buildSystemPrompt incluye marcas clave de la persona (género masculino, tono cómplice)",
+        "tests/lib/tarot.test.ts valida longitud 22 y unicidad de nombres",
+        "Ningún módulo importa nada de HTTP/Astro/Gemini"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 3,
+      "name": "lib_gemini_wrapper",
+      "title": "Wrapper único de Gemini en lib/gemini.ts",
+      "description": "Encapsular el SDK @google/genai detrás de una función generate(prompt, opts) que se pueda mockear desde tests. Lee API key de import.meta.env. Nunca hardcoded.",
+      "acceptance": [
+        "frontend-astro/src/lib/gemini.ts exporta generate(prompt, opts)",
+        "Lanza error claro si import.meta.env.GEMINI_API_KEY no está definida",
+        "tests/lib/gemini.test.ts mockea el SDK con vi.mock y valida parámetros pasados",
+        "Ningún otro archivo del proyecto importa directamente @google/genai"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 4,
+      "name": "endpoint_morpheus_quotes",
+      "title": "Endpoint estático: GET /api/morpheus-quotes",
+      "description": "Smoke test del setup de Vercel. Devuelve un array fijo de frases tipo Morpheus (idénticas a las del PHP). Sin Gemini.",
+      "acceptance": [
+        "frontend-astro/src/pages/api/morpheus-quotes.ts implementa GET",
+        "Responde 200 con application/json y un array no vacío",
+        "tests/pages/api/morpheus-quotes.test.ts valida shape y status",
+        "Smoke local con curl confirmado por el dueño"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 5,
+      "name": "endpoint_tirada",
+      "title": "Endpoint: GET /api/tirada",
+      "description": "Selecciona 3 arcanos al azar (sin reemplazo) de lib/tarot.ts y los devuelve con su nombre. Sin llamada a Gemini — solo lógica de dominio.",
+      "acceptance": [
+        "frontend-astro/src/pages/api/tirada.ts implementa GET",
+        "Devuelve 3 arcanos distintos cada vez",
+        "tests/pages/api/tirada.test.ts valida cardinalidad 3 y unicidad sobre 100 ejecuciones"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 6,
+      "name": "endpoint_pregunta",
+      "title": "Endpoint: POST /api/pregunta",
+      "description": "Recibe { pregunta: string } y devuelve la respuesta del Gurú generada por Gemini. Usa lib/persona + lib/gemini.",
+      "acceptance": [
+        "frontend-astro/src/pages/api/pregunta.ts implementa POST",
+        "Valida input (400 si falta pregunta o no es string)",
+        "Tests mockean lib/gemini y validan que se pasa system prompt correcto",
+        "Smoke local con curl + clave real confirmado por el dueño"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 7,
+      "name": "endpoint_reading",
+      "title": "Endpoint: POST /api/reading",
+      "description": "Lectura completa: tirada de 3 arcanos + interpretación generada por Gemini en tono del Gurú.",
+      "acceptance": [
+        "frontend-astro/src/pages/api/reading.ts implementa POST",
+        "Devuelve { arcanos: [...3], interpretacion: string }",
+        "Tests mockean Gemini y validan estructura",
+        "Smoke local confirmado por el dueño"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 8,
+      "name": "endpoint_wisdom_tweet",
+      "title": "Endpoint: GET /api/wisdom-tweet",
+      "description": "Genera un tweet en voz del Gurú, listo para publicar. ≤280 caracteres. Tema opcional vía query string.",
+      "acceptance": [
+        "frontend-astro/src/pages/api/wisdom-tweet.ts implementa GET",
+        "Soporta ?tema=<x> opcional",
+        "Devuelve { tweet: string } con length <= 280",
+        "Tests validan longitud y mockean Gemini",
+        "Smoke local confirmado por el dueño"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 9,
+      "name": "endpoint_fan_response",
+      "title": "Endpoint: POST /api/fan-response",
+      "description": "Responde a un mensaje de fan en tono del Gurú (cómplice cariñoso). Recibe { mensaje: string, contexto?: string }.",
+      "acceptance": [
+        "frontend-astro/src/pages/api/fan-response.ts implementa POST",
+        "Tests validan que el system prompt incluye 'fan emocionado → cómplice cariñoso' (regla §6 de PERSONA.md)",
+        "Smoke local confirmado por el dueño"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 10,
+      "name": "endpoint_create_image",
+      "title": "Endpoint: POST /api/create-image",
+      "description": "Genera prompt visual para una imagen del Gurú (paleta morado/cyan/negro, ciber-místico). El endpoint NO genera la imagen — devuelve el prompt textual que se enviará a un generador externo.",
+      "acceptance": [
+        "frontend-astro/src/pages/api/create-image.ts implementa POST",
+        "El prompt incluye paleta canónica (morado, cyan, negro, neón rosa)",
+        "El prompt prohíbe explícitamente fotorrealismo y caras humanas completas (§8 PERSONA)",
+        "Tests validan presencia de las palabras clave de paleta y restricciones"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 11,
+      "name": "deploy_vercel_preview",
+      "title": "Deploy a Vercel preview + smoke en URL pública",
+      "description": "Configurar el proyecto en Vercel, vincular el repo, configurar GEMINI_API_KEY como env var de proyecto, y validar smoke de los 7 endpoints en URL de preview.",
+      "acceptance": [
+        "Proyecto creado en Vercel apuntando al repo",
+        "GEMINI_API_KEY configurada como Environment Variable (no en código)",
+        "Push a feat/migrate-to-vercel genera Preview Deployment automático",
+        "Los 7 endpoints responden 200 en la URL de preview con respuestas en tono del Gurú",
+        "Documentado en progress/history.md con la URL del primer preview verde"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": 12,
+      "name": "drop_legacy_php",
+      "title": "Eliminar legacy/backend-php/ tras validación en preview",
+      "description": "Una vez confirmados los 7 endpoints en preview Vercel, borrar legacy/backend-php/ y limpiar .gitignore. El tag v0.1-php-final preserva el snapshot histórico.",
+      "acceptance": [
+        "legacy/backend-php/ no existe en el árbol de trabajo",
+        ".gitignore ya no referencia legacy/backend-php/",
+        "git log muestra el commit de borrado con referencia al tag v0.1-php-final",
+        "init.ps1 sigue verde después del borrado"
+      ],
+      "status": "pending"
+    }
+  ]
 }
