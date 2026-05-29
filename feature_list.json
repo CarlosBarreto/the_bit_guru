@@ -165,6 +165,23 @@
         "init.ps1 sigue verde después del borrado"
       ],
       "status": "pending"
+    },
+    {
+      "id": 13,
+      "name": "ui_port_astro",
+      "title": "Portar el mockup de Stitch a la UI en Astro (paleta canónica + filo cínico)",
+      "description": "Portar la estructura del mockup docs/design/stitch_mockup_v2.html a la UI en Astro siguiendo docs/design/design_brief.md: hereda layout, animaciones y tipografías; sobrescribe paleta canónica (PERSONA §8), inyecta filo cínico (PERSONA §3), usa arcanos reales de lib/tarot.ts, handle @ElGuruDeBits y elimina fotorrealismo/caras humanas. NO usar Tailwind por CDN en el porte final.",
+      "acceptance": [
+        "Las páginas Astro implementan el layout del brief (nav sticky -> hero -> tarot 3 cartas hex -> consulta -> sabiduría -> footer)",
+        "La paleta usa SOLO los hex canónicos de la tabla del brief (negro #0A0A0F, morado #7B2CBF marca, cyan #00F0FF interactivo, rosa #FF2D95 solo en el CTA de tirada); ningún ámbar/naranja del mockup",
+        "El copy incluye filo cínico (hero typewriter rota frases tipo Morpheus, footer con tagline cínico, microcopy de error no técnico) además del lado cariñoso",
+        "Las 3 cartas renderizan nombres de arcanos canónicos provenientes de lib/tarot.ts (no las posiciones pasado/presente/futuro como si fueran arcanos)",
+        "Handle del card de sabiduría es @ElGuruDeBits y no hay fotorrealismo ni caras humanas completas (PERSONA §8): hero y avatar son SVG/ilustración",
+        "No se carga Tailwind vía cdn.tailwindcss.com; se usa @astrojs/tailwind o CSS propio",
+        "Todas las animaciones (typewriter, parallax, fade-in) respetan prefers-reduced-motion",
+        "init.ps1 sigue verde"
+      ],
+      "status": "pending"
     }
   ]
 }
