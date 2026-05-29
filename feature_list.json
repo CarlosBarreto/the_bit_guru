@@ -1,0 +1,10 @@
+{
+  "project": "bit_guru",
+  "description": "Agente influencer digital — El Gurú de Bits. Tarot cibernético + lecturas + tweets con Gemini, en español/LATAM.",
+  "rules": {
+    "one_feature_at_a_time": true,
+    "require_tests_to_close": true,
+    "valid_status": ["pending", "in_progress", "done", "blocked"]
+  },
+  "features": []
+}

@@ -1,0 +1,34 @@
+{
+  "$schema_comment": "Hooks que automatizan la verificacion. El harness los ejecuta, no el agente, asi que no se pueden saltar.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npm test --prefix frontend-astro",
+            "description": "Tras editar o escribir archivos, corre los tests."
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -Command \"./init.ps1 *>&1 | Tee-Object -FilePath .harness_init.log; if ($LASTEXITCODE -ne 0) { Write-Host '[harness] init.ps1 FALLO -- revisa .harness_init.log antes de cerrar' } else { Write-Host '[harness] init.ps1 OK' }\"",
+            "description": "Antes de cerrar la sesion, fuerza una verificacion completa."
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm test --prefix frontend-astro)",
+      "PowerShell(./init.ps1)"
+    ]
+  }
+}
