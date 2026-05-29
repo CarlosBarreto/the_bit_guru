@@ -20,7 +20,7 @@
         "Existe frontend-astro/tests/smoke.test.ts con un test trivial que pasa",
         "init.ps1 termina verde"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 2,
