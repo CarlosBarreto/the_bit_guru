@@ -52,3 +52,32 @@ Plantilla de entrada (copiar al cerrar sesión):
   ```
   Esperado: HTTP 200, `Content-Type: application/json`, array JSON de 8 strings empezando por "La Matrix está en todas partes...".
 - **Notas para la próxima sesión:** La siguiente feature pending es la 5 `endpoint_tirada` (GET `/api/tirada`: selecciona 3 arcanos al azar sin reemplazo de `lib/tarot.ts`; solo lógica de dominio, sin Gemini). Deuda heredada de feature 1 aún abierta (lint en scaffold preexistente).
+
+## 2026-05-29 — feature 5 endpoint_tirada
+
+- **Veredicto:** done
+- **Resumen:** Endpoint `GET /api/tirada` que devuelve 3 arcanos distintos (sin reemplazo) tomados de `ARCANOS` (lib/tarot.ts) vía barajado parcial Fisher-Yates sobre copia + `slice(0,3)`. Sin Gemini, solo lógica de dominio. Tests verdes (cardinalidad 3 + unicidad sobre 100 ejecuciones). Aprobado por reviewer.
+- **Archivos tocados:** frontend-astro/src/pages/api/tirada.ts, frontend-astro/tests/pages/api/tirada.test.ts
+- **Notas:** lote paralelo (5,6,8)
+
+## 2026-05-29 — feature 6 endpoint_pregunta
+
+- **Veredicto:** done (smoke curl + clave real del dueño pendiente — no bloqueante)
+- **Resumen:** Endpoint `POST /api/pregunta` que recibe `{ pregunta: string }`, arma el system prompt con `buildSystemPrompt` (lib/persona) y genera la respuesta del Gurú vía `generate` (lib/gemini). Validación 400 (falta/no-string/vacío/body no-JSON), 502 si Gemini falla, 500 inesperado; mensajes neutros sin filtrar internals. 7 tests verdes con `vi.mock()` del wrapper. Aprobado por reviewer.
+- **Archivos tocados:** frontend-astro/src/pages/api/pregunta.ts, frontend-astro/tests/pages/api/pregunta.test.ts
+- **Pendiente de dueño:** smoke curl con clave real:
+  ```bash
+  npm run dev --prefix frontend-astro
+  curl -X POST http://localhost:4321/api/pregunta \
+    -H "Content-Type: application/json" \
+    -d '{"pregunta": "¿voy a triunfar en redes?"}'
+  ```
+- **Notas:** lote paralelo (5,6,8)
+
+## 2026-05-29 — feature 8 endpoint_wisdom_tweet
+
+- **Veredicto:** done (smoke local del dueño pendiente — no bloqueante)
+- **Resumen:** Endpoint `GET /api/wisdom-tweet` con `?tema=<x>` opcional; devuelve `{ tweet: string }` con length <= 280 (instrucción al prompt + truncado defensivo `truncateTweet`). Usa `buildSystemPrompt` + `generate`; 502 si Gemini falla, 500 inesperado, mensajes neutros. 7 tests verdes con `vi.mock()` del wrapper. NOTA: el implementer se cortó por error de socket antes de escribir su informe; el reviewer verificó que el código quedó íntegro (sin truncamiento, sin TODO/FIXME) y aprobó. NO existe progress/impl_endpoint_wisdom_tweet.md.
+- **Archivos tocados:** frontend-astro/src/pages/api/wisdom-tweet.ts, frontend-astro/tests/pages/api/wisdom-tweet.test.ts
+- **Pendiente de dueño:** smoke local
+- **Notas:** lote paralelo (5,6,8)

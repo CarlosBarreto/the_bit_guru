@@ -72,7 +72,7 @@
         "Devuelve 3 arcanos distintos cada vez",
         "tests/pages/api/tirada.test.ts valida cardinalidad 3 y unicidad sobre 100 ejecuciones"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 6,
@@ -85,7 +85,7 @@
         "Tests mockean lib/gemini y validan que se pasa system prompt correcto",
         "Smoke local con curl + clave real confirmado por el dueño"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 7,
@@ -112,7 +112,7 @@
         "Tests validan longitud y mockean Gemini",
         "Smoke local confirmado por el dueño"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 9,
