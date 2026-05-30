@@ -98,7 +98,7 @@
         "Tests mockean Gemini y validan estructura",
         "Smoke local confirmado por el dueño"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 8,
@@ -124,7 +124,7 @@
         "Tests validan que el system prompt incluye 'fan emocionado → cómplice cariñoso' (regla §6 de PERSONA.md)",
         "Smoke local confirmado por el dueño"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 10,
@@ -137,7 +137,7 @@
         "El prompt prohíbe explícitamente fotorrealismo y caras humanas completas (§8 PERSONA)",
         "Tests validan presencia de las palabras clave de paleta y restricciones"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 11,

@@ -81,3 +81,24 @@ Plantilla de entrada (copiar al cerrar sesión):
 - **Archivos tocados:** frontend-astro/src/pages/api/wisdom-tweet.ts, frontend-astro/tests/pages/api/wisdom-tweet.test.ts
 - **Pendiente de dueño:** smoke local
 - **Notas:** lote paralelo (5,6,8)
+
+## 2026-05-29 — feature 7 endpoint_reading
+
+- **Veredicto:** done (smoke local del dueño pendiente — no bloqueante)
+- **Resumen:** Endpoint `POST /api/reading` que sortea 3 arcanos distintos (sin reemplazo) de `lib/tarot` vía Fisher-Yates parcial y genera la interpretación en tono del Gurú con `buildSystemPrompt` (lib/persona) + `generate` (lib/gemini); devuelve `{ arcanos: [...3], interpretacion: string }`. 502 si Gemini falla, 500 inesperado, mensajes neutros. Tests mockean el wrapper `lib/gemini` y validan estructura, 3 arcanos distintos del canon y que viajan al system prompt. Aprobado por reviewer.
+- **Archivos tocados:** frontend-astro/src/pages/api/reading.ts, frontend-astro/tests/pages/api/reading.test.ts
+- **Notas:** lote paralelo (7,9,10)
+
+## 2026-05-29 — feature 9 endpoint_fan_response
+
+- **Veredicto:** done (smoke local del dueño pendiente — no bloqueante)
+- **Resumen:** Endpoint `POST /api/fan-response` que recibe `{ mensaje: string, contexto?: string }` y responde en tono cómplice cariñoso. La marca §6 'fan emocionado → cómplice cariñoso' se inyecta vía el `task` del endpoint (no se hardcodea en el test) y se valida sobre el `systemInstruction` real que recibe `generate`. 400 input inválido, 502 Gemini caído, 500 inesperado; mensajes neutros. `lib/persona.ts` y `lib/gemini.ts` intactos. Aprobado por reviewer.
+- **Archivos tocados:** frontend-astro/src/pages/api/fan-response.ts, frontend-astro/tests/pages/api/fan-response.test.ts
+- **Notas:** lote paralelo (7,9,10)
+
+## 2026-05-29 — feature 10 endpoint_create_image
+
+- **Veredicto:** done
+- **Resumen:** Endpoint `POST /api/create-image` que construye un prompt textual determinístico (sin Gemini) con la paleta canónica (morado, cyan, negro, neón rosa) y prohibición explícita de fotorrealismo y caras humanas completas (§8 PERSONA); devuelve `{ prompt: string }`. 400 input inválido, 500 con mensaje neutro. Tests validan presencia de palabras clave de paleta y restricciones. Aprobado por reviewer.
+- **Archivos tocados:** frontend-astro/src/pages/api/create-image.ts, frontend-astro/tests/pages/api/create-image.test.ts
+- **Notas:** lote paralelo (7,9,10). Con esto los 7 endpoints (4,5,6,7,8,9,10) están done; siguiente: feature 11 deploy_vercel_preview.
