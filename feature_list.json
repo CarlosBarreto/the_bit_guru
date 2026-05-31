@@ -151,7 +151,7 @@
         "Los 7 endpoints responden 200 en la URL de preview con respuestas en tono del Gurú",
         "Documentado en progress/history.md con la URL del primer preview verde"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 12,

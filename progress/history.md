@@ -102,3 +102,11 @@ Plantilla de entrada (copiar al cerrar sesión):
 - **Resumen:** Endpoint `POST /api/create-image` que construye un prompt textual determinístico (sin Gemini) con la paleta canónica (morado, cyan, negro, neón rosa) y prohibición explícita de fotorrealismo y caras humanas completas (§8 PERSONA); devuelve `{ prompt: string }`. 400 input inválido, 500 con mensaje neutro. Tests validan presencia de palabras clave de paleta y restricciones. Aprobado por reviewer.
 - **Archivos tocados:** frontend-astro/src/pages/api/create-image.ts, frontend-astro/tests/pages/api/create-image.test.ts
 - **Notas:** lote paralelo (7,9,10). Con esto los 7 endpoints (4,5,6,7,8,9,10) están done; siguiente: feature 11 deploy_vercel_preview.
+
+## 2026-05-30 — feature 11 deploy_vercel_preview
+- **Veredicto:** done
+- **URL preview:** https://the-bit-guru-git-feat-migrate-to-vercel-carlosbarretos-projects.vercel.app (commit 117990f)
+- **Resumen:** Deploy SSR a Vercel (proyecto the-bit-guru, Root Directory=frontend-astro). Smoke de los 7 endpoints: 7/7 en HTTP 200 con respuestas en tono del Gurú.
+- **Aprendizajes:** (1) repo renombrado bitsGuru->the_bit_guru por mayúsculas; remote local actualizado. (2) API key inicial con free tier limit:0 (429); key nueva sin restricción + redeploy lo resolvió; las env vars de Vercel se inyectan en build, requieren redeploy. (3) Deployment Protection de Vercel daba 401 a curl; se desactivó para el preview.
+- **Pendiente de dueño (no bloqueante):** considerar re-activar Deployment Protection; pasar GEMINI_API_KEY a frontend-astro/.env si se quiere dev local con Gemini.
+- **Notas para la próxima sesión:** siguiente pending = feature 12 drop_legacy_php (depende de este preview verde) y feature 13 ui_port_astro.
