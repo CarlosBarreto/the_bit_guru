@@ -164,7 +164,7 @@
         "git log muestra el commit de borrado con referencia al tag v0.1-php-final",
         "init.ps1 sigue verde después del borrado"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 13,

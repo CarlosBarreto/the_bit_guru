@@ -110,3 +110,10 @@ Plantilla de entrada (copiar al cerrar sesión):
 - **Aprendizajes:** (1) repo renombrado bitsGuru->the_bit_guru por mayúsculas; remote local actualizado. (2) API key inicial con free tier limit:0 (429); key nueva sin restricción + redeploy lo resolvió; las env vars de Vercel se inyectan en build, requieren redeploy. (3) Deployment Protection de Vercel daba 401 a curl; se desactivó para el preview.
 - **Pendiente de dueño (no bloqueante):** considerar re-activar Deployment Protection; pasar GEMINI_API_KEY a frontend-astro/.env si se quiere dev local con Gemini.
 - **Notas para la próxima sesión:** siguiente pending = feature 12 drop_legacy_php (depende de este preview verde) y feature 13 ui_port_astro.
+
+## 2026-05-30 — feature 12 drop_legacy_php
+- **Veredicto:** done
+- **Resumen:** Borrado de legacy/backend-php/ (7 archivos PHP) tras validar el preview Vercel verde. .gitignore limpiado de referencias a legacy. El snapshot PHP queda preservado en el tag v0.1-php-final (apunta a d3879d9, en origin).
+- **Archivos tocados:** eliminado legacy/backend-php/**, modificado .gitignore
+- **Nota:** el commit de borrado (lo hace el leader) referencia el tag v0.1-php-final.
+- **Notas para la próxima sesión:** única pending = feature 13 ui_port_astro (porte de UI desde el mockup de Stitch; ver docs/design/).

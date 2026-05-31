@@ -5,10 +5,6 @@ frontend-astro/dist/
 # Caché de vitest si se corre desde la raíz por error
 /node_modules/
 
-# Ignorar dependencias y archivos sensibles del backend (legacy PHP)
-legacy/backend-php/vendor/
-legacy/backend-php/.env
-
 # Secrets locales (MCPs, integraciones)
 .env
 .env.local
