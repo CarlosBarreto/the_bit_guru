@@ -1,0 +1,203 @@
+---
+// src/components/Hero.astro — feature 13 (ui_port_astro).
+// Landmark fijo: <section id="hero">.
+// H1 del Gurú en --font-display (Playfair). Subtítulo typewriter cínico que
+// rota entre frases de Morpheus/Gurú (brief §2). SVG inline ilustrativo:
+// silueta encapuchada SIN cara, dos puntos cyan donde irían los ojos
+// (brief §6 + PERSONA §8). CTA "PIDE TU LECTURA" ancla a #consulta.
+---
+
+<section id="hero">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <h1>El Gurú de Bits</h1>
+      <p
+        id="hero-subtitle"
+        class="hero-subtitle"
+        data-phrases='["Bienvenido al desierto de lo real, mortal.","Ay, incauto. Llegaste tarde, pero llegaste.","Tomas la pastilla azul y todo termina aquí, mijo. Tomas la roja…"]'
+      >
+        Bienvenido al desierto de lo real, mortal.
+      </p>
+      <a class="hero-cta" href="#consulta">PIDE TU LECTURA</a>
+    </div>
+
+    <div class="hero-figure" aria-hidden="true">
+      <!-- Silueta encapuchada ilustrativa: capucha + capa, sin cara.
+           Dos puntos cyan donde irían los ojos. Sin fotorrealismo (PERSONA §8). -->
+      <svg
+        class="guru-svg"
+        viewBox="0 0 200 240"
+        role="img"
+        aria-label="Silueta encapuchada del Gurú de Bits"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <!-- capa -->
+        <path
+          d="M100 28 C70 28 52 52 50 86 C40 118 30 170 26 222 C58 232 142 232 174 222 C170 170 160 118 150 86 C148 52 130 28 100 28 Z"
+          fill="var(--surface-hex)"
+          stroke="var(--morado)"
+          stroke-width="2"
+        />
+        <!-- sombra interior de la capucha -->
+        <path
+          d="M100 40 C80 40 66 60 66 92 C66 124 82 146 100 146 C118 146 134 124 134 92 C134 60 120 40 100 40 Z"
+          fill="var(--bg)"
+        />
+        <!-- borde de la capucha -->
+        <path
+          d="M100 32 C76 32 60 56 60 92 C60 130 78 154 100 154 C122 154 140 130 140 92 C140 56 124 32 100 32 Z"
+          fill="none"
+          stroke="var(--morado-claro)"
+          stroke-width="1.5"
+          opacity="0.7"
+        />
+        <!-- ojos: dos puntos cyan brillantes -->
+        <circle class="eye" cx="86" cy="96" r="5" fill="var(--cyan)" />
+        <circle class="eye" cx="114" cy="96" r="5" fill="var(--cyan)" />
+      </svg>
+      <div class="blob blob-morado"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Typewriter cínico (brief §2). Respeta prefers-reduced-motion: si el usuario
+  // lo prefiere, NO anima y deja una frase completa fija.
+  const el = document.getElementById("hero-subtitle");
+  if (el) {
+    let phrases: string[] = [];
+    try {
+      phrases = JSON.parse(el.getAttribute("data-phrases") || "[]");
+    } catch {
+      phrases = [];
+    }
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!reduce && phrases.length > 0) {
+      let pi = 0;
+      let ci = 0;
+      let deleting = false;
+      const tick = () => {
+        const phrase = phrases[pi];
+        if (!deleting) {
+          ci++;
+          el.textContent = phrase.slice(0, ci);
+          if (ci >= phrase.length) {
+            deleting = true;
+            setTimeout(tick, 2200);
+            return;
+          }
+          setTimeout(tick, 55);
+        } else {
+          ci--;
+          el.textContent = phrase.slice(0, ci);
+          if (ci <= 0) {
+            deleting = false;
+            pi = (pi + 1) % phrases.length;
+            setTimeout(tick, 400);
+            return;
+          }
+          setTimeout(tick, 25);
+        }
+      };
+      el.textContent = "";
+      setTimeout(tick, 600);
+    } else if (phrases.length > 0) {
+      // reduced-motion: frase fija completa, sin animar.
+      el.textContent = phrases[0];
+    }
+  }
+</script>
+
+<style>
+  #hero {
+    background: var(--bg);
+    padding: 6rem 1.5rem 4rem;
+    overflow: hidden;
+  }
+  .hero-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+  }
+  @media (min-width: 800px) {
+    .hero-grid {
+      grid-template-columns: 1.2fr 0.8fr;
+    }
+  }
+  .hero-copy h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.6rem, 7vw, 4.5rem);
+    line-height: 1.05;
+    margin: 0 0 1.25rem;
+    color: var(--texto-fuerte);
+    text-shadow: 0 0 28px rgba(123, 44, 191, 0.45);
+  }
+  .hero-subtitle {
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 2.4vw, 1.25rem);
+    color: var(--morado-claro);
+    min-height: 3.2em;
+    margin: 0 0 2rem;
+  }
+  .hero-subtitle::after {
+    content: "▋";
+    color: var(--cyan);
+    animation: caret-blink 1s steps(1) infinite;
+  }
+  @keyframes caret-blink {
+    50% { opacity: 0; }
+  }
+  .hero-cta {
+    display: inline-block;
+    font-family: var(--font-head);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    color: var(--texto-fuerte);
+    background: var(--morado);
+    padding: 0.95rem 2rem;
+    border-radius: 999px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .hero-cta:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 24px rgba(0, 240, 255, 0.4);
+  }
+  .hero-figure {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+  .guru-svg {
+    width: clamp(180px, 60%, 280px);
+    height: auto;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(0 0 32px rgba(123, 44, 191, 0.5));
+  }
+  .guru-svg .eye {
+    filter: drop-shadow(0 0 6px var(--cyan));
+    animation: eye-pulse 3.5s ease-in-out infinite;
+  }
+  @keyframes eye-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+  .blob {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: 0;
+  }
+  .blob-morado {
+    background: rgba(123, 44, 191, 0.35);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+</style>

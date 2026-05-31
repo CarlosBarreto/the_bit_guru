@@ -181,7 +181,7 @@
         "Todas las animaciones (typewriter, parallax, fade-in) respetan prefers-reduced-motion",
         "init.ps1 sigue verde"
       ],
-      "status": "pending"
+      "status": "done"
     }
   ]
 }

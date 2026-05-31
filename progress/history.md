@@ -117,3 +117,11 @@ Plantilla de entrada (copiar al cerrar sesión):
 - **Archivos tocados:** eliminado legacy/backend-php/**, modificado .gitignore
 - **Nota:** el commit de borrado (lo hace el leader) referencia el tag v0.1-php-final.
 - **Notas para la próxima sesión:** única pending = feature 13 ui_port_astro (porte de UI desde el mockup de Stitch; ver docs/design/).
+
+## 2026-05-30 — feature 13 ui_port_astro
+- **Veredicto:** done
+- **Resumen:** Porte de la UI del mockup de Stitch a Astro con CSS propio + design tokens canónicos (PERSONA §8). Landing = Layout (tokens+fuentes+prefers-reduced-motion) + index.astro ensamblando 6 componentes: Nav, Hero (typewriter cínico + SVG encapuchado), TarotSection (3 hex, /api/tirada, CTA rosa único), Consulta (textarea → /api/pregunta), Sabiduria (/api/wisdom-tweet, @ElGuruDeBits), Footer (taglines cínicos, sin año). Filo cínico + paleta canónica + arcanos reales + sin fotorrealismo + sin Tailwind CDN.
+- **Estrategia:** fundación serial (contrato: tokens, index, stubs, infra test Container API) → lote paralelo de 3 implementers (2 componentes c/u) → 3 reviewers en paralelo.
+- **Archivos tocados:** Layout.astro, index.astro, src/components/{Nav,Hero,TarotSection,Consulta,Sabiduria,Footer}.astro, vitest.config.ts, tests/components/*.
+- **Hito:** 13/13 features done — migración bit_guru a Astro/Vercel COMPLETA.
+- **Pendiente de dueño:** re-activar Deployment Protection en Vercel; smoke visual de la landing en el preview; (opcional) páginas viejas oraculo/zoltar/etc. siguen en el repo, fuera de scope de la migración.
