@@ -1,0 +1,148 @@
+---
+// src/components/Sabiduria.astro — feature 13 (ui_port_astro).
+// Landmark fijo: <section id="sabiduria">.
+// Card tipo tweet (fondo --surface-card). Fetch client-side a /api/wisdom-tweet
+// → { tweet }. Handle @ElGuruDeBits (brief §4), bio "Habitando los espacios
+// muertos entre paquetes". Avatar SVG sin cara realista (PERSONA §8). Microcopy
+// de error cínico si el fetch falla (brief §2).
+---
+
+<section id="sabiduria">
+  <div class="sab-wrap">
+    <article class="tweet-card">
+      <header class="tweet-head">
+        <div class="avatar" aria-hidden="true">
+          <!-- Avatar ilustrativo: silueta encapuchada, sin cara realista. -->
+          <svg viewBox="0 0 48 48" role="img" aria-label="Avatar del Gurú de Bits" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="24" cy="24" r="23" fill="var(--surface-hex)" stroke="var(--morado)" stroke-width="1.5" />
+            <path
+              d="M24 9 C16 9 11 17 11 27 C11 35 16 41 24 41 C32 41 37 35 37 27 C37 17 32 9 24 9 Z"
+              fill="var(--bg)"
+            />
+            <circle cx="19" cy="25" r="2.4" fill="var(--cyan)" />
+            <circle cx="29" cy="25" r="2.4" fill="var(--cyan)" />
+          </svg>
+        </div>
+        <div class="who">
+          <span class="name">El Gurú de Bits</span>
+          <span class="handle">@ElGuruDeBits</span>
+          <span class="bio">Habitando los espacios muertos entre paquetes</span>
+        </div>
+      </header>
+
+      <p id="wisdom-tweet" class="tweet-body" data-error="Los espíritus tienen lag. Inténtalo de nuevo, mortal.">
+        Consultando los espacios muertos entre paquetes…
+      </p>
+
+      <footer class="tweet-foot">
+        <button id="wisdom-regen" type="button" class="regen">Otra señal</button>
+      </footer>
+    </article>
+  </div>
+</section>
+
+<script>
+  const body = document.getElementById("wisdom-tweet");
+  const btn = document.getElementById("wisdom-regen");
+  const errorMsg =
+    body?.getAttribute("data-error") ||
+    "Los espíritus tienen lag. Inténtalo de nuevo, mortal.";
+
+  async function loadWisdom() {
+    if (!body) return;
+    body.textContent = "Consultando los espacios muertos entre paquetes…";
+    try {
+      const res = await fetch("/api/wisdom-tweet");
+      if (!res.ok) throw new Error("bad status");
+      const data = await res.json();
+      const tweet = (data && data.tweet) ? String(data.tweet) : "";
+      body.textContent = tweet || errorMsg;
+    } catch {
+      // Microcopy cínico, nunca error técnico (brief §2).
+      body.textContent = errorMsg;
+    }
+  }
+
+  if (btn) btn.addEventListener("click", loadWisdom);
+  loadWisdom();
+</script>
+
+<style>
+  #sabiduria {
+    background: var(--surface-section);
+    padding: 4rem 1.5rem;
+  }
+  .sab-wrap {
+    max-width: 560px;
+    margin: 0 auto;
+  }
+  .tweet-card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-hex);
+    border-radius: 18px;
+    padding: 1.5rem;
+    box-shadow: 0 0 32px rgba(123, 44, 191, 0.18);
+  }
+  .tweet-head {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+  }
+  .avatar {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+  }
+  .avatar svg {
+    width: 48px;
+    height: 48px;
+    display: block;
+  }
+  .who {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.3;
+  }
+  .name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    color: var(--texto-fuerte);
+  }
+  .handle {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--cyan);
+  }
+  .bio {
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--morado-claro);
+    margin-top: 0.2rem;
+  }
+  .tweet-body {
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--texto);
+    margin: 1.25rem 0 1rem;
+  }
+  .tweet-foot {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .regen {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--cyan);
+    background: transparent;
+    border: 1px solid var(--surface-hex);
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .regen:hover {
+    border-color: var(--cyan);
+    box-shadow: 0 0 16px rgba(0, 240, 255, 0.35);
+  }
+</style>

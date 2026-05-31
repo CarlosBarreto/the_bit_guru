@@ -2,9 +2,13 @@
 frontend-astro/node_modules/
 frontend-astro/dist/
 
-# Ignorar dependencias y archivos sensibles del backend
-backend-php/vendor/
-backend-php/.env
+# Caché de vitest si se corre desde la raíz por error
+/node_modules/
+
+# Secrets locales (MCPs, integraciones)
+.env
+.env.local
+.harness_init.log
 
 # Archivos de sistema operativo
 .DS_Store

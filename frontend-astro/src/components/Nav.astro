@@ -1,0 +1,96 @@
+---
+// src/components/Nav.astro — feature 13 (ui_port_astro).
+// Nav sticky con marca, links a secciones y CTA "PIDE TU LECTURA".
+// Contrato fijo de fundación: landmark <nav id="nav">.
+---
+
+<nav id="nav" aria-label="Navegación principal">
+  <a class="marca" href="#hero">El Gurú <span class="acento">de Bits</span></a>
+
+  <ul class="links">
+    <li><a href="#tarot">Tarot</a></li>
+    <li><a href="#consulta">Consulta</a></li>
+    <li><a href="#sabiduria">Sabiduría</a></li>
+  </ul>
+
+  <a class="cta" href="#consulta">PIDE TU LECTURA</a>
+</nav>
+
+<style>
+  #nav {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.9rem 1.5rem;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid color-mix(in srgb, var(--morado) 28%, transparent);
+  }
+
+  .marca {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.15rem;
+    letter-spacing: 0.01em;
+    color: var(--texto-fuerte);
+    text-decoration: none;
+  }
+
+  .marca .acento {
+    color: var(--morado-claro);
+  }
+
+  .links {
+    display: flex;
+    gap: 1.75rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .links a {
+    font-family: var(--font-head);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--texto);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .links a:hover,
+  .links a:focus-visible {
+    color: var(--cyan);
+  }
+
+  .cta {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--texto-fuerte);
+    text-decoration: none;
+    padding: 0.6rem 1.1rem;
+    border: 1px solid var(--morado);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--morado) 18%, transparent);
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .cta:hover,
+  .cta:focus-visible {
+    background: var(--morado);
+    border-color: var(--morado-claro);
+  }
+
+  @media (max-width: 640px) {
+    .links {
+      display: none;
+    }
+  }
+</style>

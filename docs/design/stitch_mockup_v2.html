@@ -1,0 +1,352 @@
+<!--
+  Mockup de Stitch — iteración 2 (2026-05-29)
+  Source: https://stitch.withgoogle.com (preview node ID f22ed385e7bb4383a33dd23366a84ba7)
+  Uso: blueprint estructural para el porte a Astro.
+  NO copiar paleta, microcopy ni placeholders tal cual — leer docs/design/design_brief.md
+  antes de tocar nada.
+-->
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>El Gurú de Bits | Tu Mística Digital</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;family=Be+Vietnam+Pro:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500&amp;family=Playfair+Display:ital,wght@0,700;1,700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#00dbe9",
+                    "on-primary-fixed": "#1e1b19",
+                    "on-secondary-fixed-variant": "#633f00",
+                    "on-secondary": "#452b00",
+                    "on-surface-variant": "#d0c4be",
+                    "surface-container": "#221f1b",
+                    "on-surface": "#e9e1db",
+                    "on-error-container": "#ffdad6",
+                    "inverse-surface": "#e9e1db",
+                    "tertiary-container": "#001719",
+                    "secondary": "#ffb954",
+                    "surface-bright": "#3c3934",
+                    "surface-container-high": "#2d2926",
+                    "on-tertiary-fixed": "#002022",
+                    "secondary-fixed": "#ffddb4",
+                    "surface-tint": "#ccc5c1",
+                    "on-tertiary-fixed-variant": "#004f54",
+                    "surface-variant": "#383430",
+                    "on-error": "#690005",
+                    "outline": "#998f89",
+                    "primary-fixed-dim": "#ccc5c1",
+                    "surface-container-low": "#1e1b18",
+                    "on-background": "#e9e1db",
+                    "error": "#ffb4ab",
+                    "surface-container-highest": "#383430",
+                    "on-primary": "#33302d",
+                    "primary": "#ccc5c1",
+                    "inverse-primary": "#625d5b",
+                    "outline-variant": "#4d4540",
+                    "on-tertiary": "#00363a",
+                    "on-secondary-container": "#3c2500",
+                    "error-container": "#93000a",
+                    "background": "#161310",
+                    "primary-fixed": "#e9e1dd",
+                    "on-primary-container": "#837d7a",
+                    "surface-dim": "#161310",
+                    "surface": "#161310",
+                    "inverse-on-surface": "#33302c",
+                    "primary-container": "#161311",
+                    "tertiary-fixed": "#7df4ff",
+                    "surface-container-lowest": "#100e0b",
+                    "on-tertiary-container": "#008c95",
+                    "on-primary-fixed-variant": "#4a4643",
+                    "secondary-container": "#c3841b",
+                    "secondary-fixed-dim": "#ffb954",
+                    "on-secondary-fixed": "#291800",
+                    "tertiary-fixed-dim": "#00dbe9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "lg": "48px",
+                    "gutter": "24px",
+                    "base": "8px",
+                    "md": "24px",
+                    "margin-mobile": "16px",
+                    "xl": "80px",
+                    "sm": "12px",
+                    "xs": "4px",
+                    "margin-desktop": "64px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Be Vietnam Pro"],
+                    "label-md": ["JetBrains Mono"],
+                    "label-sm": ["JetBrains Mono"],
+                    "body-md": ["Be Vietnam Pro"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "mystical": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "36px", "fontWeight": "700"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .amber-glow {
+            box-shadow: 0 0 25px 0 rgba(255, 183, 77, 0.15);
+        }
+
+        .cyan-glow {
+            box-shadow: 0 0 20px 0 rgba(0, 219, 233, 0.12);
+        }
+
+        .oracle-card-glow {
+            border-left: 3px solid #00dbe9;
+            background: linear-gradient(90deg, rgba(255, 185, 84, 0.03) 0%, rgba(22, 19, 16, 0) 100%);
+        }
+
+        .typewriter-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            50% { opacity: 0; }
+        }
+
+        .hex-card {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        }
+
+        .mystical-bg {
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(0, 219, 233, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 185, 84, 0.05) 0%, transparent 40%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface selection:bg-secondary/30 selection:text-secondary-fixed">
+<!-- Top Navigation -->
+<header class="bg-surface/80 backdrop-blur-xl dark:bg-surface/80 docked full-width top-0 z-50 sticky border-b border-outline-variant/20 shadow-sm">
+<nav class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="text-headline-md font-headline-md font-bold text-secondary dark:text-secondary-fixed">
+                El Gurú de Bits
+            </div>
+<div class="hidden md:flex items-center gap-lg">
+<a class="font-label-md text-label-md text-tertiary font-bold border-b-2 border-tertiary pb-1" href="#lectura">Lectura</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#consulta">Consulta</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#sabiduria">Sabiduría</a>
+</div>
+<button class="bg-secondary text-on-secondary px-6 py-2.5 rounded-full font-label-md text-label-md font-bold hover:scale-95 transition-transform duration-150 amber-glow">
+                PIDE TU LECTURA
+            </button>
+</nav>
+</header>
+<main class="mystical-bg">
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-margin-mobile md:px-margin-desktop py-xl overflow-hidden">
+<div class="relative z-10 max-w-4xl">
+<div class="mb-lg opacity-90 scale-90 md:scale-100 transition-transform duration-700">
+<img alt="El Gurú de Bits" class="w-64 h-64 md:w-80 md:h-80 mx-auto rounded-full object-cover shadow-[0_0_60px_-15px_rgba(0,219,233,0.3)]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6SXrPvw6jnv-8IQcCgp0O_WKK5auSftee2yZoKqQ9NKOrGnb56u7E34T1cBn9l42AlNDKK3HxmbhYmoou2wPGfeeK6x3QT6nQ5Qduahuai4AgbLFrxWzv-S36bs2azL1miZOwQOrGfLGRdFChTWZ1vlp1eOwTqCUCBWS9Da3GjMDFZDw2rIEcLH7xwsJwyUejtuQ99lw4Bo0OysXqgHwn93MPv58nbv36mh1xGLPwN3UNKL_ZGhJU4qGDrD3MasiveyflAhV2"/>
+</div>
+<h1 class="font-mystical text-[64px] md:text-[96px] leading-tight text-secondary-fixed mb-base tracking-tighter drop-shadow-lg">
+                    EL GURÚ DE BITS
+                </h1>
+<p class="font-body-lg text-body-lg md:text-[24px] text-primary max-w-2xl mx-auto mb-lg italic opacity-80 min-h-[60px]">
+<span class="typewriter-cursor" id="typewriter"></span>
+</p>
+<div class="flex flex-col md:flex-row gap-base justify-center">
+<button class="bg-secondary text-on-secondary px-xl py-lg rounded-xl font-headline-md hover:scale-105 active:scale-95 transition-all duration-300 amber-glow flex items-center gap-base group">
+                        DAME UNA SEÑAL
+                        <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">bolt</span>
+</button>
+</div>
+</div>
+<!-- Atmospheric elements -->
+<div class="absolute inset-0 z-0 pointer-events-none opacity-20">
+<div class="absolute top-1/4 left-1/4 w-96 h-96 bg-tertiary/20 blur-[100px] rounded-full"></div>
+<div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 blur-[100px] rounded-full"></div>
+</div>
+</section>
+<!-- Tarot Section -->
+<section class="py-xl px-margin-mobile md:px-margin-desktop bg-surface-container-low/50 relative" id="lectura">
+<div class="max-w-7xl mx-auto text-center">
+<h2 class="font-headline-lg text-headline-lg md:text-headline-xl text-on-surface mb-lg">
+                    Vamos a ver qué te dicen los <span class="text-tertiary">bits</span>, sobrino.
+                </h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-xl mt-xl justify-items-center">
+<!-- Hex Card 1 -->
+<div class="group relative w-64 h-80 flex items-center justify-center transition-all duration-500 hover:-translate-y-4">
+<div class="hex-card w-full h-full bg-surface-container-highest border border-outline-variant/30 flex flex-col items-center justify-center p-md cyan-glow">
+<span class="material-symbols-outlined text-[64px] text-tertiary mb-base" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<p class="font-label-md text-label-md text-on-surface-variant">EL PASADO DIGITAL</p>
+</div>
+<div class="absolute -inset-2 bg-tertiary/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity hex-card -z-10"></div>
+</div>
+<!-- Hex Card 2 -->
+<div class="group relative w-64 h-80 flex items-center justify-center transition-all duration-500 hover:-translate-y-4">
+<div class="hex-card w-full h-full bg-surface-container-highest border border-outline-variant/30 flex flex-col items-center justify-center p-md cyan-glow">
+<span class="material-symbols-outlined text-[64px] text-tertiary mb-base" style="font-variation-settings: 'FILL' 1;">memory</span>
+<p class="font-label-md text-label-md text-on-surface-variant">EL PRESENTE BINARIO</p>
+</div>
+<div class="absolute -inset-2 bg-tertiary/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity hex-card -z-10"></div>
+</div>
+<!-- Hex Card 3 -->
+<div class="group relative w-64 h-80 flex items-center justify-center transition-all duration-500 hover:-translate-y-4">
+<div class="hex-card w-full h-full bg-surface-container-highest border border-outline-variant/30 flex flex-col items-center justify-center p-md cyan-glow">
+<span class="material-symbols-outlined text-[64px] text-tertiary mb-base" style="font-variation-settings: 'FILL' 1;">cloud_done</span>
+<p class="font-label-md text-label-md text-on-surface-variant">EL DESTINO EN LA NUBE</p>
+</div>
+<div class="absolute -inset-2 bg-tertiary/10 blur-xl opacity-0 group-hover:opacity-100 transition-opacity hex-card -z-10"></div>
+</div>
+</div>
+<div class="mt-xl">
+<button class="bg-surface-container-highest text-secondary border border-secondary/30 px-lg py-md rounded-full font-label-md text-label-md hover:bg-secondary hover:text-on-secondary transition-all duration-300">
+                        A VER QUÉ SALE
+                    </button>
+</div>
+</div>
+</section>
+<!-- Inquiry Section -->
+<section class="py-xl px-margin-mobile md:px-margin-desktop" id="consulta">
+<div class="max-w-4xl mx-auto bg-surface-container-high rounded-3xl p-md md:p-xl border border-outline-variant/20 shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-lg opacity-10">
+<span class="material-symbols-outlined text-[120px]">psychology</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-secondary mb-base">Pregúntale al Gurú</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg max-w-lg">
+                    No te quedes con la duda, mijo. Las redes son grandes y el camino es largo, pero aquí estoy yo para echarte la mano.
+                </p>
+<div class="space-y-base">
+<textarea class="w-full bg-surface-container-highest border-b-2 border-outline-variant focus:border-tertiary focus:ring-0 transition-all duration-300 text-on-surface p-md rounded-t-lg min-h-[150px] font-body-md" placeholder="Suelta tu duda, aquí entre nos. ¿Qué te trae por acá?"></textarea>
+<div class="flex justify-end pt-base">
+<button class="bg-tertiary text-on-tertiary px-lg py-md rounded-full font-label-md text-label-md font-bold hover:scale-105 active:scale-95 transition-all duration-200 cyan-glow flex items-center gap-xs">
+                            INVOCAR RESPUESTA
+                            <span class="material-symbols-outlined">send</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Daily Wisdom Section -->
+<section class="py-xl px-margin-mobile md:px-margin-desktop" id="sabiduria">
+<div class="max-w-7xl mx-auto text-center mb-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">Sabiduría de tu tío el Gurú</h2>
+</div>
+<div class="max-w-2xl mx-auto">
+<div class="oracle-card-glow p-lg rounded-xl border border-outline-variant/20 backdrop-blur-sm transition-transform hover:scale-[1.02] duration-300">
+<div class="flex items-center gap-base mb-base">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-secondary/50">
+<img alt="Gurú Perfil" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6SXrPvw6jnv-8IQcCgp0O_WKK5auSftee2yZoKqQ9NKOrGnb56u7E34T1cBn9l42AlNDKK3HxmbhYmoou2wPGfeeK6x3QT6nQ5Qduahuai4AgbLFrxWzv-S36bs2azL1miZOwQOrGfLGRdFChTWZ1vlp1eOwTqCUCBWS9Da3GjMDFZDw2rIEcLH7xwsJwyUejtuQ99lw4Bo0OysXqgHwn93MPv58nbv36mh1xGLPwN3UNKL_ZGhJU4qGDrD3MasiveyflAhV2"/>
+</div>
+<div class="text-left">
+<p class="font-label-md text-label-md font-bold text-secondary">@ElTioBits</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Consejo del día</p>
+</div>
+</div>
+<blockquote class="font-body-lg text-body-lg text-on-surface italic leading-relaxed mb-base text-left">
+                        "Mijo, el amor es como un bug: no lo esperas, te traba todo el sistema, pero al final aprendes un montón. No te agüites, mejor dale un reboot al corazón."
+                    </blockquote>
+<div class="flex items-center gap-lg border-t border-outline-variant/10 pt-base text-on-surface-variant">
+<div class="flex items-center gap-xs hover:text-tertiary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">favorite</span>
+<span class="font-label-sm">4.2k</span>
+</div>
+<div class="flex items-center gap-xs hover:text-tertiary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">repeat</span>
+<span class="font-label-sm">1.8k</span>
+</div>
+<div class="flex items-center gap-xs hover:text-tertiary transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-sm">share</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-container-lowest full-width py-12 flex flex-col items-center gap-base text-center w-full px-margin-mobile md:px-margin-desktop border-t border-outline-variant/10">
+<div class="text-headline-md font-headline-md font-bold text-secondary mb-base">
+            El Gurú de Bits
+        </div>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md mx-auto mb-md">
+            Ya sabes que aquí te espero, mijo. Las puertas del algoritmo siempre están abiertas para ti.
+        </p>
+<div class="flex gap-lg mb-lg">
+<a class="font-label-md text-label-md text-outline hover:text-secondary underline decoration-secondary/30 transition-all duration-200" href="#">#01010001</a>
+<a class="font-label-md text-label-md text-outline hover:text-secondary underline decoration-secondary/30 transition-all duration-200" href="#">#MísticaDigital</a>
+<a class="font-label-md text-label-md text-outline hover:text-secondary underline decoration-secondary/30 transition-all duration-200" href="#">#TíoBits</a>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface opacity-60">
+            © 2024 El Gurú de Bits. Aquí te espero, mijo.
+        </p>
+</footer>
+<script>
+        // Typewriter Effect
+        const text = "Pásale, mijo. El universo tiene un mensaje para ti, y yo solo soy el traductor.";
+        const element = document.getElementById('typewriter');
+        let i = 0;
+
+        function typeWriter() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 50);
+            }
+        }
+
+        setTimeout(typeWriter, 1000);
+
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+            observer.observe(section);
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            const glows = document.querySelectorAll('.mystical-bg div');
+            glows.forEach((glow, index) => {
+                const moveX = (x - 0.5) * (index + 1) * 20;
+                const moveY = (y - 0.5) * (index + 1) * 20;
+                glow.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            });
+        });
+    </script>
+</body></html>

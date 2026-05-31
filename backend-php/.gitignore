@@ -1,5 +1,0 @@
-# Ignorar la carpeta de dependencias de Composer
-/vendor/
-
-# Ignorar el archivo de variables de entorno. ¡Contiene secretos!
-.env

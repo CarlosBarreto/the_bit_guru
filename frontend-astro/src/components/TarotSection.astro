@@ -1,0 +1,247 @@
+---
+// src/components/TarotSection.astro — feature 13 (ui_port_astro).
+// Sección de tirada: 3 cartas hexagonales (clip-path) que arrancan en estado
+// vacío (sigilo abstracto) y, al pulsar el CTA ritual "TIRAR 3 ARCANOS"
+// (único uso de --rosa), hacen fetch('/api/tirada') y pintan los nombres de los
+// 3 arcanos canónicos que devuelve el endpoint ([{ nombre }] x3 desde lib/tarot).
+// Microcopy de error con filo cínico (brief §2). <style> scoped.
+const posiciones = ["Pasado", "Presente", "Futuro"];
+---
+
+<section id="tarot">
+  <div class="tarot-wrap">
+    <header class="tarot-head">
+      <p class="tarot-kicker">El Oráculo</p>
+      <h2 class="tarot-title">Tres arcanos para tu destino, mortal</h2>
+      <p class="tarot-sub">
+        El barajado no miente. Tú decides si lo crees.
+      </p>
+    </header>
+
+    <div class="tarot-cards" data-tarot-cards>
+      {
+        posiciones.map((pos, i) => (
+          <article class="hex-card" data-card data-index={i}>
+            <div class="hex-card__inner">
+              <span class="hex-card__pos">{pos}</span>
+              <span class="hex-card__sigil" data-sigil aria-hidden="true">
+                <svg viewBox="0 0 64 64" width="48" height="48" role="img" aria-label="Sigilo arcano">
+                  <polygon
+                    points="32,4 56,18 56,46 32,60 8,46 8,18"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  />
+                  <circle cx="32" cy="32" r="10" fill="none" stroke="currentColor" stroke-width="2" />
+                  <path d="M32 12 L32 22 M32 42 L32 52 M14 32 L24 32 M40 32 L50 32" stroke="currentColor" stroke-width="2" />
+                </svg>
+              </span>
+              <span class="hex-card__name" data-name></span>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <p class="tarot-error" data-error hidden role="alert"></p>
+
+    <button type="button" class="tirar-btn" data-tirar>
+      TIRAR 3 ARCANOS
+    </button>
+  </div>
+</section>
+
+<style>
+  #tarot {
+    background: var(--surface-section);
+    padding: 6rem 1.5rem;
+  }
+
+  .tarot-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2.5rem;
+  }
+
+  .tarot-head {
+    text-align: center;
+    max-width: 640px;
+  }
+
+  .tarot-kicker {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 0.75rem;
+    color: var(--cyan);
+    margin: 0 0 0.75rem;
+  }
+
+  .tarot-title {
+    font-family: var(--font-head);
+    font-weight: 800;
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    color: var(--texto-fuerte);
+    margin: 0 0 0.75rem;
+    line-height: 1.1;
+  }
+
+  .tarot-sub {
+    font-family: var(--font-body);
+    color: var(--texto);
+    margin: 0;
+    opacity: 0.8;
+  }
+
+  .tarot-cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    width: 100%;
+  }
+
+  .hex-card {
+    width: 220px;
+    height: 254px;
+    background: var(--surface-hex);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: grid;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--morado) 35%, transparent);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    cursor: default;
+  }
+
+  .hex-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 0 28px color-mix(in srgb, var(--morado) 45%, transparent);
+  }
+
+  .hex-card__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem 1.25rem;
+    text-align: center;
+  }
+
+  .hex-card__pos {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.65rem;
+    color: var(--cyan);
+  }
+
+  .hex-card__sigil {
+    color: var(--morado-claro);
+    opacity: 0.55;
+    display: inline-flex;
+  }
+
+  .hex-card__name {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--texto-fuerte);
+    line-height: 1.2;
+    min-height: 1.2em;
+  }
+
+  /* Estado revelado: oculta el sigilo, muestra el nombre del arcano. */
+  .hex-card.is-revealed .hex-card__sigil {
+    display: none;
+  }
+
+  .tarot-error {
+    font-family: var(--font-mono);
+    color: var(--cyan);
+    margin: 0;
+    text-align: center;
+  }
+
+  .tarot-error[hidden] {
+    display: none;
+  }
+
+  /* CTA ritual: ÚNICO uso de --rosa en todo el sitio. */
+  .tirar-btn {
+    font-family: var(--font-head);
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 1rem;
+    color: var(--texto-fuerte);
+    background: var(--rosa);
+    border: none;
+    border-radius: 999px;
+    padding: 1rem 2.5rem;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 24px color-mix(in srgb, var(--rosa) 50%, transparent);
+  }
+
+  .tirar-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 36px color-mix(in srgb, var(--rosa) 65%, transparent);
+  }
+
+  .tirar-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>("[data-tirar]");
+  const cards = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-tarot-cards] [data-card]"),
+  );
+  const errorEl = document.querySelector<HTMLElement>(
+    "#tarot [data-error]",
+  );
+
+  function mostrarError(msg: string) {
+    if (!errorEl) return;
+    errorEl.textContent = msg;
+    errorEl.hidden = false;
+  }
+
+  function limpiarError() {
+    if (!errorEl) return;
+    errorEl.textContent = "";
+    errorEl.hidden = true;
+  }
+
+  btn?.addEventListener("click", async () => {
+    limpiarError();
+    btn.disabled = true;
+    const textoOriginal = btn.textContent;
+    btn.textContent = "BARAJANDO…";
+
+    try {
+      const res = await fetch("/api/tirada");
+      if (!res.ok) throw new Error("respuesta no ok");
+      const tirada = (await res.json()) as Array<{ nombre: string }>;
+
+      cards.forEach((card, i) => {
+        const nameEl = card.querySelector<HTMLElement>("[data-name]");
+        const arcano = tirada[i];
+        if (nameEl && arcano) {
+          nameEl.textContent = arcano.nombre;
+          card.classList.add("is-revealed");
+        }
+      });
+    } catch {
+      mostrarError("Los espíritus tienen lag. Inténtalo de nuevo, mortal.");
+    } finally {
+      btn.disabled = false;
+      btn.textContent = textoOriginal;
+    }
+  });
+</script>

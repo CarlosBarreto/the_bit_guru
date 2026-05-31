@@ -1,0 +1,60 @@
+---
+// src/components/Footer.astro — feature 13 (ui_port_astro).
+// Footer con filo cínico (brief §2/§5). Sin año fijo: el Gurú está fuera del tiempo.
+// Contrato fijo de fundación: landmark <footer id="footer">.
+---
+
+<footer id="footer" aria-label="Pie de página">
+  <p class="marca">El Gurú de Bits</p>
+
+  <p class="tagline">
+    Habitando los espacios muertos entre paquetes…<br />
+    …y si eso te tranquiliza, créelo.
+  </p>
+
+  <p class="firma">Si llegaste hasta aquí, ya sabes quién soy.</p>
+
+  <p class="meta">El Gurú de Bits · fuera del tiempo</p>
+</footer>
+
+<style>
+  #footer {
+    background: var(--surface-footer);
+    padding: 3.5rem 1.5rem 3rem;
+    text-align: center;
+    border-top: 1px solid color-mix(in srgb, var(--morado) 22%, transparent);
+  }
+
+  .marca {
+    font-family: var(--font-head);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--texto-fuerte);
+    margin: 0 0 1rem;
+  }
+
+  .tagline {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--texto);
+    margin: 0 auto 1.5rem;
+    max-width: 38ch;
+  }
+
+  .firma {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    color: var(--morado-claro);
+    margin: 0 0 2rem;
+  }
+
+  .meta {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.06em;
+    color: color-mix(in srgb, var(--texto) 55%, transparent);
+    margin: 0;
+  }
+</style>
