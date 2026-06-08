@@ -1,5 +1,11 @@
 # Design brief — bit_guru UI
 
+> ⚠ **OBSOLETO (2026-06-08).** Este brief describe la UI ciber-mística neón de la
+> feature 13 (commit `92eba7e`), ya superada. La fuente de verdad de diseño del sitio
+> es ahora **`docs/design/redesign_advisory_spec.md`** (rediseño deadpan de consultora
+> Tier-1), que sustituye este documento y `PERSONA.md §8` para el sitio. Se conserva
+> como evidencia histórica; **no implementar contra este brief.**
+
 > Documento de referencia para el implementer cuando llegue la feature de UI.
 > El mockup base vive en `docs/design/stitch_mockup_v2.html` (iteración 2 de Stitch,
 > 2026-05-29). Esa iteración tiene buena **estructura** pero rompe la **paleta canónica**

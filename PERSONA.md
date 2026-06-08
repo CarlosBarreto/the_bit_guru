@@ -136,10 +136,28 @@ Los nombres son canónicos. No se cambian sin proceso. Lista completa en `backen
 
 ## 8. ESTÉTICA VISUAL
 
-- **Paleta**: morado profundo + cyan eléctrico + negro. Toques de neón rosa para acentos.
-- **Universo visual**: ciber-místico. Tarot + circuitos + glitches + tipografía ritual.
-- **Avatar / imagen del Gurú**: rostro parcialmente oculto, capucha o capa, ojos brillantes (no humanos). Nunca cara completa, nunca un humano realista.
-- **Imágenes generadas** (`createImage` endpoint): siempre con esta paleta. Nunca fotorrealismo.
+> **Actualizado 2026-06-08.** El **sitio web** pivotó a un registro editorial de
+> consultora deadpan. La fuente de verdad visual del sitio es ahora
+> `docs/design/redesign_advisory_spec.md`, que **sustituye** la antigua estética
+> ciber-mística *para el sitio*. Las imágenes sociales generadas conservan la paleta
+> neón (§8.2). La regla de **no rostros / no fotorrealismo** rige en ambas capas (§8.3).
+
+### 8.1 Sitio web — La Firma (canónico)
+
+- **Registro**: informe institucional impreso (tipo McKinsey/FT), deadpan. El parody vive en el contenido, no en la forma.
+- **Paleta**: tinta navy + papel marfil (neutrals) + UNA familia de acento por página (burgundy / olive / forest). Sin neón, sin gradientes, sin glow, **light-only** (no dark mode). Tokens autoritativos en la spec.
+- **Tipografía**: serif editorial (Source Serif 4) + grotesque neutra (IBM Plex Sans) + mono (IBM Plex Mono).
+- **Universo visual**: editorial sobrio — hairlines, tablas de datos, diagramas a dos tintas, mucho espacio en blanco. Sin circuitos/glitches.
+- Detalle completo (tokens, componentes, criterios): `docs/design/redesign_advisory_spec.md`.
+
+### 8.2 Imágenes generadas / presencia social del Gurú
+
+- **Paleta**: morado profundo + cyan eléctrico + negro, con toques de neón rosa. Universo ciber-místico (tarot + circuitos + glitches + tipografía ritual).
+- Aplica a las imágenes que produce el endpoint `createImage` y a la presencia del Gurú en redes (su cara pública como influencer). Esta capa **no** cambió con el rediseño del sitio.
+
+### 8.3 Avatar / imagen del Gurú (regla transversal)
+
+- Rostro parcialmente oculto, capucha o capa, ojos brillantes (no humanos). **Nunca cara completa, nunca un humano realista, nunca fotorrealismo.** Innegociable en ambas capas.
 
 ---
 
@@ -168,3 +186,4 @@ En `backend-php/app/Controllers/TarotController.php`:
 ## HISTORIAL
 
 - **2026-05-28** — Creación. Persona acordada en conversación con el dueño tras reactivar el proyecto como agente influencer digital. Lore "La migración" escrito con ubicación en Sierra Madre Occidental + Wirikuta, anclado en 2010 (era FarmVille), remate cierre Angry Birds. Borrador previo del proceso en `11_MICT/outputs/2026-05-28_persona_bit-guru.md`.
+- **2026-06-08** — §8 reestructurada (decisión del dueño). El **sitio web** pivota a registro editorial de consultora deadpan; fuente de verdad: `docs/design/redesign_advisory_spec.md`, que sustituye la estética ciber-mística para el sitio y a `docs/design/design_brief.md`. La paleta neón se conserva para imágenes sociales generadas (§8.2). Voz (§1–§7) sin cambios salvo el **registro de usted** en el sitio. La UI neón de la feature 13 (commit `92eba7e`) queda obsoleta.
