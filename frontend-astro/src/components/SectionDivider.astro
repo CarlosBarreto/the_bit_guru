@@ -1,0 +1,40 @@
+---
+// src/components/SectionDivider.astro — feature 15 (redesign_layout_primitives).
+// Divisor de sección editorial (spec § LAYOUT "Section Divider" + TYPOGRAPHY
+// "Eyebrows"): filete de 1px solid var(--ink-rule) arriba, con un eyebrow
+// opcional en var(--font-mono), MAYÚSCULAS, letter-spacing 0.08em, tamaño
+// var(--step--1) y color var(--accent), alineado a la IZQUIERDA. Consume SOLO
+// tokens de Layout.astro; cero hex sueltos, sin sombra/glow.
+//
+// Uso: <SectionDivider label="Áreas de Práctica" /> o <SectionDivider /> (solo
+// el filete). El eyebrow se omite del DOM cuando no hay label.
+export interface Props {
+  label?: string;
+  class?: string;
+}
+
+const { label, class: className } = Astro.props;
+---
+
+<div class:list={["section-divider", className]} role="separator">
+  {label && <span class="eyebrow">{label}</span>}
+</div>
+
+<style>
+  .section-divider {
+    border-top: 1px solid var(--ink-rule);
+    padding-top: var(--space-3);
+    margin-block: var(--space-7);
+    text-align: left;
+  }
+
+  .eyebrow {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+</style>
