@@ -1,0 +1,148 @@
+---
+// src/components/TopNavigation.astro — feature 16 (redesign_nav_footer).
+// Navegación superior del rediseño (docs/design/redesign_advisory_spec.md
+// § REQUIRED COMPONENTS / SITE MAP): wordmark "Bit Gurú · Asesoría Estratégica"
+// que enlaza a Inicio (/) + EXACTAMENTE 6 enlaces en el orden de la spec. La
+// ruta actual marca estado activo accesible con aria-current="page". Sticky
+// discreto, sin sombra luminosa, sin degradados, sin dark mode. Consume SOLO tokens
+// de Layout.astro (--accent*, --ink*, --paper*, --space-*, --step-*, --font-*).
+//
+// El estado activo se calcula con Astro.url.pathname; se expone la prop
+// `pathname` (default = ruta actual) para poder testear el marcado activo bajo
+// la Container API sin depender del routing real.
+import { NAV_LINKS, HOME_HREF, normalizePath } from "./nav-links";
+
+export interface Props {
+  pathname?: string;
+}
+
+const { pathname = Astro.url.pathname } = Astro.props;
+const current = normalizePath(pathname);
+---
+
+<header id="top">
+  <nav id="nav" aria-label="Navegación principal">
+    <a class="wordmark" href={HOME_HREF}>
+      Bit Gurú <span class="wordmark-sub">· Asesoría Estratégica</span>
+    </a>
+
+    <ul class="links">
+      {
+        NAV_LINKS.map((link) => {
+          const isActive = normalizePath(link.href) === current;
+          return (
+            <li>
+              <a
+                href={link.href}
+                class:list={["link", { active: isActive }]}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {link.label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </nav>
+</header>
+
+<style>
+  #top {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--paper);
+    border-bottom: 1px solid var(--ink-rule);
+  }
+
+  #nav {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1200px;
+    margin-inline: auto;
+    padding: var(--space-4) var(--space-7);
+  }
+
+  .wordmark {
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: var(--step-1);
+    letter-spacing: 0.01em;
+    color: var(--ink-deep);
+    text-decoration: none;
+  }
+
+  .wordmark-sub {
+    font-family: var(--font-mono);
+    font-weight: 400;
+    font-size: var(--step--1);
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+  }
+
+  .links {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-6);
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .link {
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    padding-block: var(--space-1);
+    border-bottom: 1px solid transparent;
+    transition: color 150ms ease-out, border-color 150ms ease-out;
+  }
+
+  .link:hover,
+  .link:focus-visible {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* Estado activo: el color NO es el único portador (también peso + filete),
+     por accesibilidad (spec § ACCESSIBILITY CHECKLIST). */
+  .link.active {
+    color: var(--accent-deep);
+    font-weight: 600;
+    border-bottom-color: var(--accent);
+  }
+
+  .link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Tablet/móvil: el directorio fluye bajo el wordmark con la misma jerarquía
+     (spec § LAYOUT breakpoints). Sin menú hamburguesa con JS en esta fase. */
+  @media (max-width: 1023px) {
+    #nav {
+      padding: var(--space-4) var(--space-6);
+    }
+  }
+
+  @media (max-width: 640px) {
+    #nav {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-4);
+      padding: var(--space-4) var(--space-5);
+    }
+
+    .links {
+      gap: var(--space-4) var(--space-5);
+    }
+  }
+</style>

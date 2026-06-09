@@ -226,7 +226,7 @@
         "tests/ valida que el nav contiene exactamente 6 enlaces y sus rutas",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 17,
