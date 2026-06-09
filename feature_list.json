@@ -270,7 +270,7 @@
         "tests/ valida la presencia de los 4 bloques y el conteo de 3 insights",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 20,
