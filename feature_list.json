@@ -240,7 +240,7 @@
         "tests/ valida render y props de ambos componentes",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 18,

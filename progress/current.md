@@ -14,11 +14,7 @@
 
 ## Plan
 
--
-
 ## Notas
-
--
 
 ## Bloqueos
 
