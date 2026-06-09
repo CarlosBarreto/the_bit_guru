@@ -1,0 +1,155 @@
+---
+// src/components/PartnerBiographyBlock.astro — feature 18
+// (redesign_editorial_components_b). Bloque de biografía del Socio Fundador
+// (docs/design/redesign_advisory_spec.md § REQUIRED COMPONENTS
+// "PartnerBiographyBlock" / IMAGES & ILUSTRACIÓN). El retrato es un SELLO
+// editorial: SVG inline a una tinta (monograma "BG" + silueta encapuchada SIN
+// rostro), color --ink / --accent sobre --paper. NUNCA un rostro, NUNCA
+// fotorrealismo, NUNCA una imagen rasterizada con foto (spec § HARD
+// PROHIBITIONS, antiguo PERSONA §8.3). El SVG decorativo lleva aria-hidden;
+// el nombre/cargo va como
+// texto real. Dos columnas en desktop (retrato + texto), apilado en móvil.
+// Registro consultora (usted, deadpan).
+//
+// Reusable: NO fija familia de acento. Usa --accent, que la página remapea con
+// <body data-accent="...">. Consume SOLO tokens de Layout.astro (--accent*,
+// --ink*, --paper*, --space-*, --step-*, --font-*, --radius). Cero hex de marca,
+// sin gradiente, sin glow/box-shadow luminosa, sin dark mode, sin emoji.
+//
+// La bio breve se pasa por prop `bio` o por el slot por defecto (el slot tiene
+// prioridad si existe contenido). Defaults canónicos del Socio Fundador.
+export interface Props {
+  name?: string;
+  role?: string;
+  bio?: string;
+}
+
+const {
+  name = "El Gurú de Bits",
+  role = "Socio Fundador",
+  bio = "Opera desde los espacios muertos entre paquetes. Dirige los compromisos de diligencia kármica de la firma y custodia el Marco de los 22 Arcanos. Si llegó hasta aquí, ya sabe con quién trata.",
+} = Astro.props;
+---
+
+<section class="partner-bio">
+  <div class="portrait">
+    <!-- Retrato NO-FACIAL: sello editorial a una tinta (silueta encapuchada
+         sin rostro + monograma "BG"). Decorativo, aria-hidden; la identidad
+         se comunica por el texto (nombre/cargo). Sin imagen rasterizada. -->
+    <svg
+      class="seal"
+      viewBox="0 0 120 120"
+      role="img"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <circle
+        cx="60"
+        cy="60"
+        r="56"
+        fill="none"
+        stroke="var(--ink-rule)"
+        stroke-width="1"
+      ></circle>
+      <circle
+        cx="60"
+        cy="60"
+        r="48"
+        fill="none"
+        stroke="var(--accent)"
+        stroke-width="1.5"
+      ></circle>
+      <!-- Silueta encapuchada sin rostro: hombros + capucha cerrada en sombra. -->
+      <path
+        d="M60 36 C49 36 41 45 41 57 C41 64 44 69 48 73 C40 77 34 85 34 95 L86 95 C86 85 80 77 72 73 C76 69 79 64 79 57 C79 45 71 36 60 36 Z"
+        fill="var(--ink)"
+      ></path>
+      <!-- Monograma "BG" tipo sello de informe. -->
+      <text
+        x="60"
+        y="113"
+        text-anchor="middle"
+        font-family="var(--font-mono)"
+        font-size="11"
+        letter-spacing="2"
+        fill="var(--ink-muted)">BG</text
+      >
+    </svg>
+  </div>
+
+  <div class="bio">
+    <p class="name">{name}</p>
+    <p class="role">{role}</p>
+    <div class="prose">
+      <slot><p>{bio}</p></slot>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* Dos columnas en desktop (retrato + texto); apilado en móvil. Alineado a la
+     izquierda. */
+  .partner-bio {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    column-gap: var(--space-6);
+    align-items: start;
+    text-align: left;
+  }
+
+  @media (max-width: 640px) {
+    .partner-bio {
+      grid-template-columns: 1fr;
+      row-gap: var(--space-5);
+    }
+  }
+
+  .portrait {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Sello a una tinta sobre papel; esquinas casi rectas, hairline; sin glow. */
+  .seal {
+    display: block;
+    width: 120px;
+    height: 120px;
+    background: var(--paper);
+    border: 1px solid var(--ink-rule);
+    border-radius: var(--radius);
+  }
+
+  .name {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: var(--step-2);
+    line-height: 1.2;
+    color: var(--ink-deep);
+  }
+
+  /* Cargo en mono, MAYÚSCULAS, color --accent (registro de byline editorial). */
+  .role {
+    margin: var(--space-2) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+
+  /* Bio breve: serif de cuerpo, medida de lectura, color --ink. */
+  .prose {
+    margin-top: var(--space-4);
+    max-width: var(--measure);
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  .prose :global(p) {
+    margin: 0;
+  }
+</style>

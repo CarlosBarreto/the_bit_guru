@@ -1,0 +1,107 @@
+---
+// src/components/MetricTable.astro — feature 18 (redesign_editorial_components_b).
+// Tabla de datos SECA (docs/design/redesign_advisory_spec.md § REQUIRED
+// COMPONENTS "MetricTable" / ACCESSIBILITY): semántica de tabla REAL — <table>
+// con <caption>, <thead> con <th scope="col"> y <tbody> con <th scope="row">
+// en la primera celda de cada fila. NADA de divs para la estructura. Hairlines
+// 1px var(--ink-rule), banda de encabezado con fondo var(--ink-wash), valores
+// numéricos en var(--font-mono). Alineada a la IZQUIERDA, sin centrar.
+// Registro consultora (usted, deadpan).
+//
+// Reusable: NO fija familia de acento. Consume SOLO tokens de Layout.astro
+// (--ink*, --paper*, --space-*, --step-*, --font-*). Cero hex de marca, sin
+// gradiente, sin glow/box-shadow luminosa, sin dark mode, sin emoji.
+//
+// Props:
+//   caption?  — leyenda accesible de la tabla (<caption>).
+//   columns   — encabezados de columna (array de strings) → <th scope="col">.
+//   rows      — filas (array de arrays); la primera celda de cada fila es el
+//               encabezado de fila (<th scope="row">), el resto son <td>.
+export interface Props {
+  caption?: string;
+  columns: string[];
+  rows: (string | number)[][];
+}
+
+const { caption, columns, rows } = Astro.props;
+---
+
+<table class="metric-table">
+  {caption && <caption class="caption">{caption}</caption>}
+  <thead>
+    <tr>
+      {columns.map((col) => <th scope="col">{col}</th>)}
+    </tr>
+  </thead>
+  <tbody>
+    {
+      rows.map((row) => (
+        <tr>
+          {row.map((cell, index) =>
+            index === 0 ? (
+              <th scope="row">{cell}</th>
+            ) : (
+              <td class="value">{cell}</td>
+            ),
+          )}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
+
+<style>
+  /* Tabla seca, alineada a la izquierda, hairlines 1px var(--ink-rule).
+     Sin sombra/glow. */
+  .metric-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--ink-rule);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    text-align: left;
+    color: var(--ink);
+  }
+
+  /* Leyenda en mono, --step--1, color --ink-muted, alineada a la izquierda. */
+  .caption {
+    caption-side: top;
+    margin-bottom: var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+    text-align: left;
+  }
+
+  /* Banda de encabezado con fondo --ink-wash (spec § VISUAL IDENTITY). */
+  thead th {
+    background: var(--ink-wash);
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--ink-deep);
+  }
+
+  th,
+  td {
+    border: 1px solid var(--ink-rule);
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+    vertical-align: top;
+  }
+
+  /* Encabezado de fila (<th scope="row">): peso medio, color de cuerpo. */
+  tbody th {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* Valores numéricos en mono (spec § VISUAL IDENTITY / TYPOGRAPHY). */
+  .value {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+</style>

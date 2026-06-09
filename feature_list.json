@@ -255,7 +255,7 @@
         "tests/ valida estructura semantica de MetricTable y render de las tarjetas",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 19,
