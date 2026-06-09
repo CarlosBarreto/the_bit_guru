@@ -1,0 +1,192 @@
+---
+// src/components/FrameworkDiagram.astro — feature 20 (redesign_page_practica).
+// Diagrama del marco (docs/design/redesign_advisory_spec.md
+// § REQUIRED COMPONENTS "/practica · FrameworkDiagram" / IMAGES & ILUSTRACIÓN):
+// geométrico, a DOS TINTAS ESTRICTAS (--ink + --accent), SVG inline. SIN
+// gradiente, SIN sombra, SIN glow. Relaciona las áreas de práctica (columna
+// izquierda) con el Marco de los 22 Arcanos™ (columna derecha): cada área se
+// conecta con una hairline al cuerpo de 22 celdas del marco.
+//
+// El diagrama INFORMA (no es decorativo): lleva <title>/<desc> accesibles y
+// role="img" con aria-labelledby, de modo que un lector de pantalla anuncia su
+// significado. Las etiquetas de las áreas van como <text> reales dentro del SVG.
+//
+// Reusable: NO fija familia de acento. Usa --accent, que la página remapea con
+// <body data-accent="...">. Consume SOLO tokens de Layout.astro (--accent*,
+// --ink*, --paper*, --space-*, --font-*, --radius). Cero hex de marca, sin
+// gradiente, sin glow/box-shadow luminosa, sin dark mode, sin emoji.
+//
+// `areas` son los nombres de las áreas de práctica a mapear (izquierda);
+// `dimensions` es el número de dimensiones del marco (por defecto 22, los
+// arcanos). El conteo solo dibuja la rejilla; el canon de arcanos vive en
+// lib/tarot.ts y se reencuadra en /metodologia (feature 21), no aquí.
+export interface Props {
+  areas: string[];
+  dimensions?: number;
+}
+
+const { areas, dimensions = 22 } = Astro.props;
+
+// Geometría de la rejilla de 22 dimensiones (11 columnas × 2 filas), a la
+// derecha. Coordenadas en el espacio del viewBox (0 0 760 360).
+const GRID_X = 470;
+const GRID_TOP = 70;
+const CELL = 24;
+const CELL_GAP = 2;
+const COLS = 11;
+const cells = Array.from({ length: dimensions }, (_, i) => {
+  const col = i % COLS;
+  const row = Math.floor(i / COLS);
+  return {
+    x: GRID_X + col * (CELL + CELL_GAP),
+    y: GRID_TOP + row * (CELL + CELL_GAP),
+  };
+});
+
+// Filas de las áreas (izquierda), distribuidas verticalmente.
+const AREA_X = 30;
+const AREA_W = 360;
+const AREA_TOP = 56;
+const AREA_GAP = 16;
+const AREA_H = 56;
+const areaRows = areas.map((label, i) => ({
+  label,
+  y: AREA_TOP + i * (AREA_H + AREA_GAP),
+}));
+
+// Nodo de convergencia hacia el que apuntan todas las áreas, justo a la
+// izquierda de la rejilla del marco.
+const HUB_X = 440;
+const HUB_Y = AREA_TOP + (areas.length * (AREA_H + AREA_GAP) - AREA_GAP) / 2;
+const GRID_MID_Y = GRID_TOP + (CELL + CELL_GAP) - CELL_GAP / 2;
+---
+
+<figure class="framework">
+  <svg
+    class="diagram"
+    viewBox="0 0 760 360"
+    role="img"
+    aria-labelledby="framework-title framework-desc"
+    focusable="false"
+  >
+    <title id="framework-title">
+      Mapa de las áreas de práctica hacia el Marco de los 22 Arcanos
+    </title>
+    <desc id="framework-desc">
+      Cada línea de servicio de la firma converge en un único marco diagnóstico
+      propietario de veintidós dimensiones. Las áreas de la izquierda se conectan
+      con la rejilla de la derecha, que representa las veintidós dimensiones del
+      marco.
+    </desc>
+
+    {/* Áreas de práctica (izquierda): caja hairline + etiqueta + conector al hub */}
+    {
+      areaRows.map((area) => (
+        <g>
+          <rect
+            x={AREA_X}
+            y={area.y}
+            width={AREA_W}
+            height={AREA_H}
+            rx="2"
+            fill="none"
+            stroke="var(--ink-rule)"
+            stroke-width="1"
+          />
+          <rect
+            x={AREA_X}
+            y={area.y}
+            width="3"
+            height={AREA_H}
+            fill="var(--accent)"
+          />
+          <text
+            class="area-label"
+            x={AREA_X + 16}
+            y={area.y + AREA_H / 2}
+            dominant-baseline="middle"
+          >
+            {area.label}
+          </text>
+          {/* Conector de área → hub: codo ortogonal en --ink (geometría seca) */}
+          <polyline
+            points={`${AREA_X + AREA_W},${area.y + AREA_H / 2} ${HUB_X - 14},${area.y + AREA_H / 2} ${HUB_X - 14},${HUB_Y} ${HUB_X},${HUB_Y}`}
+            fill="none"
+            stroke="var(--ink)"
+            stroke-width="1"
+          />
+        </g>
+      ))
+    }
+
+    {/* Nodo de convergencia (hub) en --accent: rombo geométrico sólido */}
+    <polygon
+      points={`${HUB_X},${HUB_Y - 12} ${HUB_X + 12},${HUB_Y} ${HUB_X},${HUB_Y + 12} ${HUB_X - 12},${HUB_Y}`}
+      fill="var(--accent)"
+    />
+    {/* Conector hub → rejilla del marco */}
+    <line
+      x1={HUB_X + 12}
+      y1={HUB_Y}
+      x2={GRID_X}
+      y2={GRID_MID_Y}
+      stroke="var(--ink)"
+      stroke-width="1"></line>
+
+    {/* Marco de las 22 dimensiones (derecha): rejilla de celdas a dos tintas */}
+    <text class="grid-label" x={GRID_X} y={GRID_TOP - 16}>
+      Marco · 22 dimensiones
+    </text>
+    {
+      cells.map((cell, i) => (
+        <rect
+          x={cell.x}
+          y={cell.y}
+          width={CELL}
+          height={CELL}
+          rx="1"
+          fill={i % 3 === 0 ? "var(--accent)" : "none"}
+          stroke="var(--ink)"
+          stroke-width="1"
+        />
+      ))
+    }
+  </svg>
+</figure>
+
+<style>
+  .framework {
+    margin: 0;
+    padding: var(--space-6);
+    border: 1px solid var(--ink-rule);
+    border-radius: var(--radius);
+    background: var(--paper);
+    text-align: left;
+  }
+
+  /* SVG fluido dentro del marco; sin sombra/glow. Dos tintas estrictas
+     resueltas por las variables (--ink, --accent). */
+  .diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  /* Etiquetas de área: sans, legible, color --ink. El SVG hereda los tokens
+     tipográficos vía CSS (las propiedades font-* aplican a <text>). */
+  .area-label {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 600;
+    fill: var(--ink);
+  }
+
+  /* Eyebrow de la rejilla en mono, mayúsculas (registro editorial). */
+  .grid-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    fill: var(--ink-muted);
+  }
+</style>

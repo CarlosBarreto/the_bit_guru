@@ -1,0 +1,107 @@
+---
+// src/components/ServiceCard.astro — feature 20 (redesign_page_practica, Phase 3).
+// Tarjeta de línea de servicio (docs/design/redesign_advisory_spec.md
+// § REQUIRED COMPONENTS "/practica · ServiceCard" / TYPOGRAPHY / LAYOUT):
+// título serif (--step-2) + descripción deadpan (registro consultora) + lista
+// de entregables (<ul>/<li>). Estructura con <article>. Borde hairline 1px
+// var(--ink-rule) + filete superior de acento (border-top 2px var(--accent));
+// SIN sombra/glow. Esquinas casi rectas (--radius). Alineado a la IZQUIERDA.
+//
+// Reusable: NO fija familia de acento. Usa --accent, que la página remapea con
+// <body data-accent="...">. Consume SOLO tokens de Layout.astro (--accent*,
+// --ink*, --paper*, --space-*, --step-*, --font-*, --radius). Cero hex de marca,
+// sin gradiente, sin glow/box-shadow luminosa, sin dark mode, sin emoji.
+//
+// description y deliverables son opcionales: cada bloque se omite del DOM cuando
+// no se pasa la prop (deliverables vacío también se omite).
+export interface Props {
+  title: string;
+  description?: string;
+  deliverables?: string[];
+}
+
+const { title, description, deliverables } = Astro.props;
+const hasDeliverables = Array.isArray(deliverables) && deliverables.length > 0;
+---
+
+<article class="service-card">
+  <h3 class="title">{title}</h3>
+  {description && <p class="description">{description}</p>}
+  {
+    hasDeliverables && (
+      <ul class="deliverables">
+        {deliverables!.map((item) => (
+          <li class="deliverable">{item}</li>
+        ))}
+      </ul>
+    )
+  }
+</article>
+
+<style>
+  /* Tarjeta editorial: borde hairline 1px var(--ink-rule) + filete superior de
+     acento (border-top 2px var(--accent)). Sin sombra/glow. Esquinas casi
+     rectas (--radius). Alineada a la izquierda. */
+  .service-card {
+    border: 1px solid var(--ink-rule);
+    border-top: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: var(--space-5);
+    background: var(--paper-pure);
+    text-align: left;
+  }
+
+  /* Título de la línea de servicio en serif editorial, --step-2 (H3).
+     line-height de headline 1.2. */
+  .title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: var(--step-2);
+    line-height: 1.2;
+    color: var(--ink-deep);
+  }
+
+  /* Descripción deadpan: serif de cuerpo, color --ink, medida de lectura,
+     alineada a la izquierda. */
+  .description {
+    margin: var(--space-4) 0 0;
+    max-width: var(--measure);
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  /* Lista de entregables: hairline superior que la separa de la descripción.
+     Marcadores cuadrados en --accent (filete corto), no bullets redondos. */
+  .deliverables {
+    margin: var(--space-5) 0 0;
+    padding: var(--space-4) 0 0;
+    border-top: 1px solid var(--ink-rule);
+    list-style: none;
+  }
+
+  .deliverable {
+    position: relative;
+    margin: 0;
+    padding: var(--space-1) 0 var(--space-1) var(--space-5);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  /* Marcador de entregable: filete corto de acento a la izquierda (geometría
+     editorial, no bullet). El color no es el único portador: el marcador es un
+     elemento estructural junto al sangrado. */
+  .deliverable::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.7em;
+    width: var(--space-3);
+    height: 2px;
+    background: var(--accent);
+  }
+</style>

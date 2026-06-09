@@ -285,7 +285,7 @@
         "tests/ valida render de la pagina y de ServiceCard",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 21,
