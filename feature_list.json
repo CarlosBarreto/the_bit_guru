@@ -315,7 +315,7 @@
         "tests/ mockea el fetch y valida render del archivo y MemoCard",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 23,

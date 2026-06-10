@@ -1,0 +1,112 @@
+---
+// src/components/QuarterlyArchive.astro — feature 22 (redesign_page_memos).
+// Índice cronológico de memorandos agrupado por trimestre
+// (docs/design/redesign_advisory_spec.md § REQUIRED COMPONENTS
+// "QuarterlyArchive — índice cronológico agrupado por trimestre, tabla/lista
+// hairline"). Recibe las entradas YA ordenadas (más reciente primero) y las
+// agrupa por `quarter` preservando el orden de aparición; no inventa orden.
+//
+// Estructura: una <section> por trimestre (aria-labelledby a su <h2> mono) con
+// una lista <ol> de MemoCard separadas por hairlines 1px var(--ink-rule)
+// (spec § LAYOUT: la regla fina es el principal recurso de estructura).
+// Consume SOLO tokens de Layout.astro; cero hex de marca, sin sombra/glow,
+// alineado a la IZQUIERDA. No fija familia de acento (la página la remapea).
+import MemoCard from "./MemoCard.astro";
+import type { MemoEntry } from "../utils/memos-client";
+
+export interface Props {
+  memos: MemoEntry[];
+}
+
+const { memos } = Astro.props;
+
+interface QuarterGroup {
+  quarter: string;
+  id: string;
+  memos: MemoEntry[];
+}
+
+// "T2 2026" → "trimestre-t2-2026" (id estable para aria-labelledby).
+function quarterId(quarter: string): string {
+  const slug = quarter
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  return `trimestre-${slug}`;
+}
+
+const groups: QuarterGroup[] = [];
+for (const memo of memos) {
+  const existing = groups.find((group) => group.quarter === memo.quarter);
+  if (existing) {
+    existing.memos.push(memo);
+  } else {
+    groups.push({
+      quarter: memo.quarter,
+      id: quarterId(memo.quarter),
+      memos: [memo],
+    });
+  }
+}
+---
+
+<div class="quarterly-archive">
+  {
+    groups.map((group) => (
+      <section class="quarter-group" aria-labelledby={group.id}>
+        <h2 class="quarter-label" id={group.id}>
+          {group.quarter}
+        </h2>
+        <ol class="memo-list" role="list">
+          {group.memos.map((memo) => (
+            <li class="memo-item">
+              <MemoCard {...memo} />
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .quarterly-archive {
+    text-align: left;
+  }
+
+  /* Cada trimestre abre con hairline + etiqueta mono de registro. */
+  .quarter-group {
+    border-top: 1px solid var(--ink-rule);
+    padding-top: var(--space-4);
+    margin-top: var(--space-7);
+  }
+
+  .quarter-group:first-child {
+    margin-top: 0;
+  }
+
+  .quarter-label {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step-0);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-deep);
+  }
+
+  /* Lista hairline: separación por regla fina entre memorandos. */
+  .memo-list {
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .memo-item {
+    padding-block: var(--space-5);
+  }
+
+  .memo-item + .memo-item {
+    border-top: 1px solid var(--ink-rule);
+  }
+</style>

@@ -1,0 +1,164 @@
+---
+// src/components/MemoCard.astro — feature 22 (redesign_page_memos, Phase 4).
+// Tarjeta de memorando trimestral (docs/design/redesign_advisory_spec.md
+// § REQUIRED COMPONENTS "MemoCard — variante de InsightCard con número de memo
+// (mono) y trimestre"): número de memo + trimestre en --font-mono, asunto en
+// serif (h3), epígrafe opcional (se llena desde GET /api/morpheus-quotes) y
+// cuerpo que se hidrata desde GET /api/wisdom-tweet (utils/memos-client.ts).
+//
+// La variante DESCARTA la caja con borde de InsightCard: vive dentro de la
+// lista hairline de QuarterlyArchive (spec § LAYOUT: la regla fina es el
+// principal recurso de estructura) y la separación la pone la lista.
+//
+// Estados accesibles (spec § ACCESSIBILITY):
+//   - carga: [data-memo-body] con role="status" + aria-live="polite" y
+//     microcopy institucional server-rendered (funciona sin JS).
+//   - error: [data-memo-error] con role="alert", oculto hasta que la
+//     hidratación falle. Microcopy compartida con utils/memos-client.ts
+//     (una sola fuente de verdad).
+// Consume SOLO tokens de Layout.astro (--accent*, --ink*, --space-*, --step-*,
+// --font-*, --measure). Cero hex de marca, sin sombra ni efecto prohibido,
+// alineado a la IZQUIERDA. Registro consultora (usted, deadpan).
+import {
+  MEMO_LOADING_TEXT,
+  MEMO_ERROR_TEXT,
+  EPIGRAPH_SOURCE_TEXT,
+  type MemoEntry,
+} from "../utils/memos-client";
+
+export type Props = MemoEntry;
+
+const { number, title, quarter, date, tema, withEpigraph } = Astro.props;
+---
+
+<article
+  class="memo-card"
+  data-memo-card
+  data-memo-state="loading"
+  data-memo-tema={tema}
+>
+  <header class="memo-head">
+    <p class="memo-number">{number}</p>
+    <p class="memo-quarter">{quarter}</p>
+  </header>
+  <h3 class="memo-title">{title}</h3>
+  {
+    withEpigraph && (
+      <blockquote class="memo-epigraph" data-memo-epigraph hidden>
+        <p class="memo-epigraph-text" data-memo-epigraph-text />
+        <footer class="memo-epigraph-source">{EPIGRAPH_SOURCE_TEXT}</footer>
+      </blockquote>
+    )
+  }
+  <p class="memo-body" data-memo-body role="status" aria-live="polite">
+    {MEMO_LOADING_TEXT}
+  </p>
+  <p class="memo-error" data-memo-error role="alert" hidden>
+    {MEMO_ERROR_TEXT}
+  </p>
+  {date && <p class="memo-date">Registrado: {date}</p>}
+</article>
+
+<style>
+  .memo-card {
+    text-align: left;
+    max-width: var(--measure);
+  }
+
+  /* Cabecera de registro: número de memo y trimestre en mono
+     (spec § TYPOGRAPHY "Mono: códigos, tablas de datos, metadatos, fechas"). */
+  .memo-head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+
+  .memo-number {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+
+  .memo-quarter {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  /* Asunto del memorando en serif editorial. */
+  .memo-title {
+    margin: var(--space-2) 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--ink-deep);
+  }
+
+  /* Epígrafe opcional: filete de acento a la izquierda, serif en cursiva. */
+  .memo-epigraph {
+    margin: var(--space-4) 0 0;
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--accent);
+  }
+
+  .memo-epigraph-text {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+
+  .memo-epigraph-source {
+    margin-top: var(--space-2);
+    font-family: var(--font-mono);
+    font-style: normal;
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  /* Cuerpo del memo (lo hidrata utils/memos-client.ts). */
+  .memo-body {
+    margin: var(--space-4) 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  /* Mientras delibera el Oráculo, el cuerpo se lee como nota provisional. */
+  .memo-card[data-memo-state="loading"] .memo-body {
+    color: var(--ink-muted);
+    font-style: italic;
+  }
+
+  /* Estado de error: institucional, portado por la familia de acento de la
+     página (los acentos cubren estados, spec § VISUAL IDENTITY). */
+  .memo-error {
+    margin: var(--space-4) 0 0;
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--accent);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--accent-deep);
+  }
+
+  .memo-date {
+    margin: var(--space-3) 0 0;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+</style>
