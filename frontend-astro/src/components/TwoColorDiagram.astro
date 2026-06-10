@@ -1,0 +1,162 @@
+---
+// src/components/TwoColorDiagram.astro — feature 21 (redesign_page_metodologia).
+// Diagrama del marco completo (docs/design/redesign_advisory_spec.md
+// § REQUIRED COMPONENTS "/metodologia · TwoColorDiagram"): las 22 dimensiones
+// diagnósticas en una rejilla de 11×2 celdas que convergen en un único nodo de
+// diagnóstico preliminar. A DOS TINTAS ESTRICTAS: dentro del SVG solo se usan
+// var(--ink) y var(--accent) — más estricto que FrameworkDiagram. SIN
+// gradiente, SIN sombra, SIN glow, SIN hex.
+//
+// El diagrama INFORMA (patrón accesible de FrameworkDiagram): role="img" +
+// aria-labelledby con <title>/<desc>, y cada celda lleva un <title> con el
+// nombre canónico COMPLETO del arcano (lib/tarot.ts; no se renombra nada).
+// El código romano de cada celda se rotula como <text> real en --font-mono.
+//
+// Reusable: NO fija familia de acento (la página la remapea vía data-accent).
+// `dimensions` son las 22 entradas canónicas de ARCANOS ("<ROMANO> - <Nombre>").
+export interface Props {
+  dimensions: readonly string[];
+}
+
+const { dimensions } = Astro.props;
+
+// Cada entrada canónica se parsea SIN renombrar: código romano (antes del
+// separador " - ") para la celda, string completo para el <title> accesible.
+const GRID_X = 8;
+const GRID_TOP = 56;
+const CELL_W = 64;
+const CELL_H = 40;
+const GAP = 4;
+const COLS = 11;
+const cells = dimensions.map((canonical, i) => ({
+  canonical,
+  code: canonical.split(" - ")[0],
+  x: GRID_X + (i % COLS) * (CELL_W + GAP),
+  y: GRID_TOP + Math.floor(i / COLS) * (CELL_H + GAP),
+}));
+
+// Convergencia: línea vertical desde el centro de la rejilla hasta el rombo
+// del diagnóstico preliminar.
+const ROWS = Math.ceil(dimensions.length / COLS);
+const GRID_W = COLS * (CELL_W + GAP) - GAP;
+const GRID_BOTTOM = GRID_TOP + ROWS * (CELL_H + GAP) - GAP;
+const HUB_X = GRID_X + GRID_W / 2;
+const HUB_Y = GRID_BOTTOM + 64;
+---
+
+<figure class="two-color">
+  <svg
+    class="diagram"
+    viewBox="0 0 760 240"
+    role="img"
+    aria-labelledby="two-color-title two-color-desc"
+    focusable="false"
+  >
+    <title id="two-color-title">
+      El Marco de los 22 Arcanos: vista completa de las veintidós dimensiones
+    </title>
+    <desc id="two-color-desc">
+      Rejilla de veintidós celdas, una por cada dimensión diagnóstica del marco
+      propietario, identificadas por su código romano. Todas las dimensiones
+      convergen en un único nodo de diagnóstico preliminar, debajo de la
+      rejilla.
+    </desc>
+
+    {/* Etiqueta superior de la rejilla (mono, tinta) */}
+    <text class="grid-label" x={GRID_X} y={GRID_TOP - 16} fill="var(--ink)">
+      El Marco · 22 dimensiones · vista completa
+    </text>
+
+    {/* Rejilla 11×2: celda hairline en --ink + código romano en --accent.
+        El <title> de cada celda conserva el nombre canónico completo. */}
+    {
+      cells.map((cell) => (
+        <g class="cell">
+          <title>{cell.canonical}</title>
+          <rect
+            x={cell.x}
+            y={cell.y}
+            width={CELL_W}
+            height={CELL_H}
+            rx="1"
+            fill="none"
+            stroke="var(--ink)"
+            stroke-width="1"
+          />
+          <text
+            class="cell-code"
+            x={cell.x + CELL_W / 2}
+            y={cell.y + CELL_H / 2}
+            text-anchor="middle"
+            dominant-baseline="central"
+            fill="var(--accent)"
+          >
+            {cell.code}
+          </text>
+        </g>
+      ))
+    }
+
+    {/* Convergencia: línea vertical en --ink hacia el rombo del diagnóstico */}
+    <line
+      x1={HUB_X}
+      y1={GRID_BOTTOM}
+      x2={HUB_X}
+      y2={HUB_Y - 14}
+      stroke="var(--ink)"
+      stroke-width="1"></line>
+    <polygon
+      points={`${HUB_X},${HUB_Y - 12} ${HUB_X + 12},${HUB_Y} ${HUB_X},${HUB_Y + 12} ${HUB_X - 12},${HUB_Y}`}
+      fill="var(--accent)"></polygon>
+    <text
+      class="hub-label"
+      x={HUB_X + 24}
+      y={HUB_Y}
+      dominant-baseline="central"
+      fill="var(--ink)"
+    >
+      DIAGNÓSTICO PRELIMINAR
+    </text>
+  </svg>
+</figure>
+
+<style>
+  .two-color {
+    margin: 0;
+    padding: var(--space-6);
+    border: 1px solid var(--ink-rule);
+    border-radius: var(--radius);
+    background: var(--paper);
+    text-align: left;
+  }
+
+  /* SVG fluido; las DOS tintas (--ink, --accent) van como atributos fill/stroke
+     dentro del propio SVG. Aquí solo tipografía y layout. */
+  .diagram {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .grid-label,
+  .hub-label,
+  .cell-code {
+    font-family: var(--font-mono);
+  }
+
+  .grid-label {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cell-code {
+    font-size: 13px;
+    letter-spacing: 0.04em;
+  }
+
+  .hub-label {
+    font-size: 12px;
+    letter-spacing: 0.08em;
+  }
+</style>

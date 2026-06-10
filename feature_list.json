@@ -300,7 +300,7 @@
         "tests/ valida que se renderizan las 22 dimensiones desde lib/tarot.ts",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 22,
