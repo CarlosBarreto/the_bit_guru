@@ -14,12 +14,16 @@
 
 ## Plan
 
--
+- [ ]
+- [ ]
+- [ ]
 
 ## Notas
 
--
+(Decisiones, descubrimientos, bloqueos. Actualiza mientras trabajas, no al
+final.)
 
 ## Bloqueos
 
-(ninguno)
+(Si quedan abiertos al cerrar, mueve al final de `progress/history.md` con
+estado `blocked` para que la próxima sesión los retome.)

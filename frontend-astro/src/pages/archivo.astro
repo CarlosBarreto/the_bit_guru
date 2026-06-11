@@ -1,0 +1,154 @@
+---
+// src/pages/archivo.astro — feature 23 (redesign_page_archivo).
+// Archivo de Compromisos de la firma (docs/design/redesign_advisory_spec.md
+// § PAGE-BY-PAGE "/archivo" / SITE MAP): acento BURGUNDY. PageShell deja el
+// remapeo --accent* en el <main data-accent="burgundy">, así que toda la página
+// usa UNA sola familia de acento (nav/footer siguen Navy porque PageShell los
+// pone fuera del <main>).
+//
+// Estructura:
+//   1. EditorialHero — eyebrow "Archivo de Compromisos" + H1 + deck.
+//   2. SectionDivider "Casos Seleccionados" + nota de registro (Prose).
+//   3. Rejilla 2-col de 4 EngagementCard. Cada caso = un sector ficticio absurdo
+//      (PERSONA §5 + ejemplos de la spec) y abre, vía <details> nativo, a su
+//      OutcomeMetricsTable con métricas deadpan.
+//
+// El disclaimer del Footer ("Resultados obtenidos en líneas temporales
+// anteriores...") NO se duplica aquí.
+//
+// Registro consultora (usted, deadpan, español canónico). Voz cínica-cómplice
+// (PERSONA §3–§4). Copy de marca real (sin lorem). Sin gradiente, sin glow, sin
+// dark mode, sin emoji, sin hype, sin Tailwind CDN. Todo a la izquierda.
+import Layout from "../layouts/Layout.astro";
+import PageShell from "../components/PageShell.astro";
+import Container from "../components/Container.astro";
+import EditorialHero from "../components/EditorialHero.astro";
+import SectionDivider from "../components/SectionDivider.astro";
+import Prose from "../components/Prose.astro";
+import EngagementCard from "../components/EngagementCard.astro";
+import OutcomeMetricsTable from "../components/OutcomeMetricsTable.astro";
+
+// Casos del archivo. Cada uno: sector ficticio absurdo (PERSONA §5 — cripto,
+// productividad tóxica, espiritualidad wellness, IA), título de caso deadpan,
+// métrica destacada y un cuadro de resultados (filas: [indicador, línea base,
+// resultado, variación]). Cifras secas, en-character, sin hype.
+const ENGAGEMENTS = [
+  {
+    sector: "Una DAO en duelo",
+    title: "Cierre de ciclo para un colectivo que votó su propia disolución y siguió reuniéndose.",
+    metricValue: "-94%",
+    metricLabel: "quórum en asambleas de duelo",
+    rows: [
+      ["Propuestas sin tesorería", "37 abiertas", "2 abiertas", "-95%"],
+      ["Asambleas conmemorativas / mes", "11", "1", "-91%"],
+      ["Tiempo medio de luto on-chain", "9 meses", "6 semanas", "-83%"],
+    ],
+  },
+  {
+    sector: "Un fondo de inversión poseído",
+    title: "Exorcismo operativo de un comité que tomaba decisiones por consenso con una entidad no registrada.",
+    metricValue: "+3",
+    metricLabel: "firmantes humanos restituidos",
+    rows: [
+      ["Decisiones atribuibles a la entidad", "82%", "0%", "-100%"],
+      ["Reuniones con vela encendida", "todas", "ninguna", "-100%"],
+      ["Rendimiento ajustado por karma", "negativo", "neutro", "+1 nivel"],
+    ],
+  },
+  {
+    sector: "Una startup de bienestar laboral",
+    title: "Diagnóstico para una empresa que instaló una campana de meditación junto a un tablero de OKR trimestrales.",
+    metricValue: "0",
+    metricLabel: "crisis existenciales resueltas por la campana",
+    rows: [
+      ["Correos enviados en domingo", "214 / mes", "198 / mes", "-7%"],
+      ["Sesiones de respiración consciente", "obligatorias", "obligatorias", "sin cambio"],
+      ["Rotación atribuida a 'falta de propósito'", "31%", "29%", "-2 pts"],
+    ],
+  },
+  {
+    sector: "Un unicornio de IA generativa",
+    title: "Acompañamiento a un equipo que confundió desplegar un modelo con resolver su crisis de sentido.",
+    metricValue: "x1",
+    metricLabel: "modelos que no devolvieron el alma",
+    rows: [
+      ["Promesas a inversionistas pendientes", "14", "14", "sin cambio"],
+      ["Pivotes por trimestre", "3", "1", "-67%"],
+      ["Madurez independiente del próximo modelo", "0%", "12%", "+12 pts"],
+    ],
+  },
+];
+---
+
+<Layout title="Archivo de Compromisos — Bit Gurú">
+  <PageShell accent="burgundy">
+    <Container>
+      <div class="page-content">
+        {/* 1 — HERO */}
+        <EditorialHero
+          eyebrow="Archivo de Compromisos"
+          title="Una selección de casos cuyos clientes ya no están en condiciones de objetar."
+          deck="Cada compromiso entró por un síntoma distinto y salió por el mismo marco diagnóstico. Las cifras son autorreportadas; nosotros nos limitamos a leerlas. Si llegó hasta aquí, ya sabe con quién trata."
+        />
+
+        {/* 2 — NOTA DEL ARCHIVO */}
+        <SectionDivider label="Casos Seleccionados" />
+        <Prose as="section" class="archive-note">
+          <p>
+            Los nombres se omiten por discreción y porque, en varios casos, la
+            entidad contratante dejó de existir antes del cierre del expediente.
+            Cada ficha abre a su cuadro de resultados; las variaciones se miden
+            contra la línea base que el propio cliente declaró el primer día. Y si
+            eso le tranquiliza, créalo.
+          </p>
+        </Prose>
+
+        {/* 3 — REJILLA DE CASOS */}
+        <div class="engagement-grid">
+          {
+            ENGAGEMENTS.map((e) => (
+              <EngagementCard
+                sector={e.sector}
+                title={e.title}
+                metricValue={e.metricValue}
+                metricLabel={e.metricLabel}
+              >
+                <OutcomeMetricsTable rows={e.rows} />
+              </EngagementCard>
+            ))
+          }
+        </div>
+      </div>
+    </Container>
+  </PageShell>
+</Layout>
+
+<style>
+  /* El contenido editorial ocupa el ancho del grid y se alinea a la izquierda.
+     Consume SOLO tokens de Layout.astro; cero hex de marca, sin gradiente, sin
+     glow, sin dark mode. */
+  .page-content {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .archive-note {
+    margin-bottom: var(--space-7);
+    color: var(--ink-muted);
+  }
+
+  /* Rejilla de casos: dos columnas en desktop, una en móvil. Sin sombra/glow;
+     la estructura la dan los bordes hairline de EngagementCard. */
+  .engagement-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  @media (max-width: 640px) {
+    .engagement-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

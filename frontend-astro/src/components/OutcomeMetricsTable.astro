@@ -1,0 +1,60 @@
+---
+// src/components/OutcomeMetricsTable.astro — feature 23 (redesign_page_archivo).
+// Variante TEMÁTICA y DELGADA de MetricTable (docs/design/redesign_advisory_spec.md
+// § REQUIRED COMPONENTS "OutcomeMetricsTable" / PAGE-BY-PAGE "/archivo"): una
+// tabla de RESULTADOS del compromiso. NO reimplementa la tabla — REUSA MetricTable
+// y solo fija las columnas canónicas de un caso y un caption deadpan por defecto.
+//
+// Columnas fijas (no parametrizables): Indicador / Línea base / Resultado /
+// Variación. El caller pasa SOLO las filas de resultados (cada fila:
+// [indicador, líneaBase, resultado, variación]); la primera celda es el
+// <th scope="row"> que pone MetricTable.
+//
+// Envuelve la tabla en un <div class="outcome-metrics-table"> con overflow-x
+// para que la tabla no rompa el ancho cuando vive DENTRO de una tarjeta angosta
+// (EngagementCard). NO fija familia de acento (la hereda del <main data-accent>);
+// consume SOLO tokens de Layout.astro. Cero hex de marca, sin gradiente, sin
+// glow/box-shadow luminosa, sin dark mode, sin emoji. Registro consultora.
+import MetricTable from "./MetricTable.astro";
+
+// Encabezados canónicos de un cuadro de resultados (no se parametrizan: la
+// uniformidad entre casos es parte de la estética de informe).
+export const OUTCOME_COLUMNS: string[] = [
+  "Indicador",
+  "Línea base",
+  "Resultado",
+  "Variación",
+];
+
+// Caption deadpan por defecto (registro de informe). El caller puede sustituirlo
+// pero NO eliminarlo: una tabla de datos siempre lleva su leyenda accesible.
+export const DEFAULT_OUTCOME_CAPTION =
+  "Cuadro de resultados del compromiso. Cifras autorreportadas por el cliente; el universo no emite estados financieros.";
+
+export interface Props {
+  // Filas de resultados: [indicador, líneaBase, resultado, variación].
+  rows: (string | number)[][];
+  // Leyenda accesible; por defecto el caption deadpan de la firma.
+  caption?: string;
+}
+
+const { rows, caption = DEFAULT_OUTCOME_CAPTION } = Astro.props;
+---
+
+<div class="outcome-metrics-table">
+  <MetricTable
+    caption={caption}
+    columns={[...OUTCOME_COLUMNS]}
+    rows={rows}
+  />
+</div>
+
+<style>
+  /* Envoltura con scroll horizontal: cuando la tabla vive dentro de una tarjeta
+     angosta (EngagementCard) no rompe el layout — desborda en su propio eje.
+     Sin sombra/glow; la estructura la dan las hairlines de MetricTable. */
+  .outcome-metrics-table {
+    overflow-x: auto;
+    text-align: left;
+  }
+</style>
