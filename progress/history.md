@@ -254,3 +254,16 @@ Plantilla de entrada (copiar al cerrar sesión):
 - **Perímetro:** los 7 endpoints `src/pages/api/*` y `src/lib/` nunca se tocaron en todo el rediseño (era de presentación).
 - **Pendiente de dueño (no bloqueante):** smoke visual del preview Vercel del site map final; decisión de merge `feat/migrate-to-vercel` → `main`; re-activar Deployment Protection; smoke con `GEMINI_API_KEY` real del flujo IntakeForm (`/admision`).
 - **Detalle:** `progress/impl_26a_cleanup.md`, `progress/review_26a_cleanup.md`, `progress/impl_26b_audits.md`, `progress/review_26b_audits.md`, `progress/audit_26.md`.
+
+---
+
+## Sesión 2026-06-12 — feature #27 fix_gemini_model_deprecated — DONE
+
+- **Rol:** leader (orquestó implementer + reviewer). **Origen:** smoke manual real, no planeado.
+- **Detección:** levantando el dev server con `GEMINI_API_KEY` real para el smoke pendiente del flujo IntakeForm (`/admision`), `POST /api/reading` devolvió **502** → el log mostró `404 NOT_FOUND: "This model models/gemini-2.0-flash is no longer available"`. Google retiró `gemini-2.0-flash` para `generateContent`. Bug de producción que tiraba los 4 endpoints Gemini (reading, pregunta, wisdom-tweet, fan-response). (Incidencia previa de infra resuelta en el camino: dos dev servers fantasma de sesiones anteriores ocupaban el :4321 en IPv4+IPv6 con tabla de rutas vieja → solo `/` respondía; se mataron y se relanzó limpio.)
+- **Diagnóstico:** la key autentica bien (error de API, no de auth). `ListModels` aún lista 2.0-flash pero `generateContent` lo rechaza. Reemplazo `gemini-2.5-flash` verificado por el leader con una llamada `generateContent` real (200) antes de tocar código. (3.0 Flash solo existe como `gemini-3-flash-preview`, preview; el dueño eligió 2.5 Flash estable.)
+- **Fix (implementer):** `DEFAULT_MODEL` en `src/lib/gemini.ts` `gemini-2.0-flash` → `gemini-2.5-flash` + comentario JSDoc actualizado; `tests/lib/gemini.test.ts` ajustado (assert del default + el test de override pasa a usar 2.0-flash con `not.toBe(DEFAULT_MODEL)` para no volverse tautológico). Perímetro: solo esos 2 archivos; endpoints intactos. Reviewer APPROVED (`review_27.md`).
+- **Verificación:** `init.ps1` exit 0 · `npm test` **532/532 (40 files)** · build verde. **Smoke real post-fix (leader, Gemini en vivo):** `POST /api/reading` → 200, 3 arcanos del canon + interpretación en tono del Gurú ("Ah, vaya circo…"); `POST /api/pregunta` → 200, `{respuesta}` en tono ("Migrar o no migrar, esa es la pregunta"); `GET /admision` 200 (olive, h1 correcto); `GET /api/morpheus-quotes` 200. **Flujo IntakeForm verificado end-to-end contra el modelo real.**
+- **Cierre:** #27 → done. **27/27 features done.** Commit pendiente (lo hace el leader).
+- **Nota infra:** la `GEMINI_API_KEY` quedó copiada en `frontend-astro/.env` (gitignored) para habilitar dev local con Gemini — mismo valor que ya estaba en el `.env` de la raíz; no es exposición nueva.
+- **Detalle:** `progress/impl_27.md`, `progress/review_27.md`.

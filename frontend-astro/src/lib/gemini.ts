@@ -15,11 +15,13 @@ import { GoogleGenAI } from "@google/genai";
 /**
  * Modelo de texto por defecto.
  *
- * Coherente con el backend PHP legacy (`legacy/backend-php/app/Controllers/
- * TarotController.php`), donde `gemini-2.0-flash` es el modelo canónico de
- * texto usado en las llamadas de pregunta, lectura y tweet.
+ * El modelo VIGENTE es `gemini-2.5-flash` (estable GA), verificado contra la
+ * API real (`generateContent` 200). El backend PHP legacy (`legacy/backend-php/
+ * app/Controllers/TarotController.php`) usaba `gemini-2.0-flash`, pero Google lo
+ * retiró para `generateContent` en 2026-06 (404 NOT_FOUND, "no longer
+ * available"), así que esa referencia histórica ya no es el canónico vigente.
  */
-export const DEFAULT_MODEL = "gemini-2.0-flash";
+export const DEFAULT_MODEL = "gemini-2.5-flash";
 
 /**
  * Opciones de generación para {@link generate}.

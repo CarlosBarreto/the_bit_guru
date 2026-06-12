@@ -381,6 +381,20 @@
         "init.ps1 verde y npm test pasa"
       ],
       "status": "done"
+    },
+    {
+      "id": 27,
+      "name": "fix_gemini_model_deprecated",
+      "title": "Fix: modelo Gemini gemini-2.0-flash deprecado (404) -> gemini-2.5-flash",
+      "description": "El smoke con GEMINI_API_KEY real (2026-06-12) revelo que DEFAULT_MODEL=gemini-2.0-flash en lib/gemini.ts devuelve 404 NOT_FOUND (Google lo retiro para generateContent). Tira los 4 endpoints Gemini (reading, pregunta, wisdom-tweet, fan-response) y por ende el flujo IntakeForm de /admision. Actualizar DEFAULT_MODEL a gemini-2.5-flash (estable GA, verificado funcionando con la key) + comentario; ajustar el test que fija el id del modelo.",
+      "acceptance": [
+        "DEFAULT_MODEL en lib/gemini.ts = gemini-2.5-flash (verificado con generateContent real)",
+        "Comentario del modelo actualizado (ya no afirma que gemini-2.0-flash es canonico vigente)",
+        "tests/lib/gemini.test.ts ajustado al nuevo id sin perder cobertura del wrapper",
+        "init.ps1 verde y npm test pasa",
+        "Smoke manual: POST /api/reading y /api/pregunta devuelven 200 con tono del Guru (lo re-verifica el leader contra Gemini real)"
+      ],
+      "status": "done"
     }
   ]
 }
