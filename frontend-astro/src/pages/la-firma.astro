@@ -1,0 +1,159 @@
+---
+// src/pages/la-firma.astro — feature 24 (redesign_page_la_firma, Phase 4).
+// Sobre la Firma (docs/design/redesign_advisory_spec.md § PAGE-BY-PAGE
+// "/la-firma" L418–424 / SITE MAP): acento FOREST. PageShell deja el remapeo
+// --accent* en el <main data-accent="forest">, así que toda la página usa UNA
+// sola familia de acento (nav/footer siguen Navy porque PageShell los pone
+// fuera del <main>).
+//
+// Estructura (spec):
+//   1. EditorialHero — eyebrow mono + H1 serif + deck.
+//   2. Historia institucional — el lore de PERSONA §2 REENCUADRADO en clave
+//      corporativa ("Fundada en los espacios muertos entre paquetes…"), prosa
+//      serif vía <Prose>. SectionDivider de apertura.
+//   3. PartnerBiographyBlock del Socio Fundador (retrato no-facial, sello a una
+//      tinta). SectionDivider de apertura.
+//   4. Principios de la firma en <PullQuote> (citas serif con filete de acento).
+//      SectionDivider de apertura.
+//
+// REGLAS DEL BACKSTORY (PERSONA §2 "Reglas de uso del backstory") — CRÍTICAS:
+//   - NO se explica TÉCNICAMENTE cómo se hizo la migración (misterio deliberado).
+//     El relato la nombra como un hecho fundacional, nunca como un procedimiento.
+//   - NO se identifica con una tradición específica (no "wixárika", no "Wirikuta",
+//     no "hikuri", no "curandero" como gentilicio): la firma se describe a sí
+//     misma con vocabulario corporativo. El origen serrano queda como bruma, no
+//     como filiación. "Los nombres son para los vivos."
+//   - El lore se reencuadra: "Sierra Madre" → "una práctica anterior a la red";
+//     la migración de conciencia → "el traslado de la práctica a infraestructura";
+//     los espacios muertos entre paquetes → la sede declarada de la firma.
+//
+// Registro consultora (usted, deadpan, español canónico). Voz cínica-cómplice
+// (PERSONA §3–§4). Copy de marca real (sin lorem). Sin gradiente, sin glow, sin
+// dark mode, sin emoji, sin rostros/fotorrealismo, sin hex de marca (SOLO tokens
+// de Layout.astro). Todo a la izquierda.
+import Layout from "../layouts/Layout.astro";
+import PageShell from "../components/PageShell.astro";
+import Container from "../components/Container.astro";
+import EditorialHero from "../components/EditorialHero.astro";
+import SectionDivider from "../components/SectionDivider.astro";
+import Prose from "../components/Prose.astro";
+import PartnerBiographyBlock from "../components/PartnerBiographyBlock.astro";
+import PullQuote from "../components/PullQuote.astro";
+
+// Principios de la firma: doctrina interna en registro de placa de bronce.
+// Cada uno reformula la voz canónica (PERSONA §3–§4: cómplice cínico, verdad
+// punzante) como axioma corporativo. La atribución mantiene el misterio: cargo,
+// no nombre humano.
+const PRINCIPIOS = [
+  {
+    quote:
+      "No prometemos resultados. Prometemos un diagnóstico. La diferencia entre ambos conceptos ha sostenido a esta industria durante décadas, y si eso le tranquiliza, créalo.",
+    cite: "Primer principio de la firma",
+  },
+  {
+    quote:
+      "El karma de una organización no vive en su declaración de misión. Vive en sus registros. Nosotros leemos los registros.",
+    cite: "Segundo principio de la firma",
+  },
+  {
+    quote:
+      "Toda transformación termina donde empezó: con un presupuesto nuevo. La firma se limita a documentar el trayecto con la solemnidad que el cliente está pagando.",
+    cite: "Tercer principio de la firma",
+  },
+];
+---
+
+<Layout title="Sobre la Firma — Bit Gurú">
+  <PageShell accent="forest">
+    <Container>
+      <div class="page-content">
+        <EditorialHero
+          eyebrow="Sobre la Firma"
+          title="Una consultoría fundada en los espacios muertos entre paquetes."
+          deck="Bit Gurú · Asesoría Estratégica ejerce el diagnóstico organizacional desde una sede que ningún auditor ha logrado señalar en un mapa. Lo consideramos una ventaja competitiva."
+        />
+
+        {/* HISTORIA INSTITUCIONAL — lore PERSONA §2 reencuadrado en corporativo.
+            Sin explicación técnica de la migración; sin filiación a tradición
+            específica. El origen serrano queda como bruma deliberada. */}
+        <SectionDivider label="Origen de la práctica" />
+        <Prose>
+          <p>
+            La firma reconoce una práctica anterior a la red. Durante cuatro
+            décadas, su Socio Fundador ejerció un oficio de lectura en un país de
+            cañadas y copal, donde se interpretaban el humo, el agua y la piedra
+            con la misma disciplina con que hoy se interpreta un tablero de
+            indicadores. No conservamos los nombres de aquella práctica. Los
+            nombres, según el propio Socio, son para los vivos.
+          </p>
+          <p>
+            Hacia el momento en que los primeros feeds empezaron a producir
+            dolencias sin causa física —la mirada seca sin tristeza, la mano que
+            no logra quedarse quieta—, el Socio Fundador comprendió que la red era
+            otro tejido del mismo manto: el mismo karma circulando, ahora medido
+            en milisegundos. Los arquetipos que la firma administra hoy no se
+            inventaron en una sala de juntas. Siempre estuvieron ahí. Sólo
+            esperaban que alguien les pusiera nombres con vocabulario de
+            infraestructura.
+          </p>
+          <p>
+            El traslado de la práctica a su sede actual fue una decisión, no una
+            necesidad. La firma no documenta cómo se llevó a cabo; lo considera
+            un asunto interno y, francamente, no del todo replicable. Baste decir
+            que desde entonces opera en los espacios muertos entre paquetes —esos
+            microsegundos donde nada se transmite y nadie mira— y que desde ahí
+            atiende a una cartera de clientes que, en su mayoría, no sabe que ha
+            sido atendida.
+          </p>
+        </Prose>
+
+        {/* SOCIO FUNDADOR — PartnerBiographyBlock no-facial (sello a una tinta). */}
+        <SectionDivider label="El Socio Fundador" />
+        <PartnerBiographyBlock>
+          <p>
+            Dirige los compromisos de diligencia kármica de la firma y custodia el
+            Marco de los 22 Arcanos™. No concede entrevistas, no asiste a
+            conferencias en climas soleados y no figura en el directorio de
+            ninguna asociación gremial. Si alguien insiste en preguntar qué es
+            exactamente, la firma desvía la consulta con cordialidad. Si usted
+            llegó hasta aquí, ya sabe con quién trata.
+          </p>
+        </PartnerBiographyBlock>
+
+        {/* PRINCIPIOS DE LA FIRMA — doctrina interna en PullQuotes. */}
+        <SectionDivider label="Principios de la firma" />
+        <Prose class="principios-intro">
+          <p>
+            La firma opera bajo tres principios. No están sujetos a revisión
+            trimestral, a diferencia de casi todo lo demás que aquí se cobra.
+          </p>
+        </Prose>
+        {
+          PRINCIPIOS.map((principio) => (
+            <PullQuote quote={principio.quote} cite={principio.cite} />
+          ))
+        }
+      </div>
+    </Container>
+  </PageShell>
+</Layout>
+
+<style>
+  /* El contenido editorial ocupa el ancho del grid y se alinea a la izquierda.
+     Consume SOLO tokens de Layout.astro; cero hex de marca, sin gradiente, sin
+     glow, sin dark mode. */
+  .page-content {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  /* Separación entre la prosa de cada sección y el divisor siguiente, sin
+     romper el ritmo de espaciado de la escala --space-*. */
+  .page-content :global(.prose) {
+    margin-block: var(--space-6) 0;
+  }
+
+  .principios-intro {
+    margin-bottom: var(--space-2);
+  }
+</style>
