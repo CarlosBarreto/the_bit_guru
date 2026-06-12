@@ -4,7 +4,12 @@
   "rules": {
     "one_feature_at_a_time": true,
     "require_tests_to_close": true,
-    "valid_status": ["pending", "in_progress", "done", "blocked"]
+    "valid_status": [
+      "pending",
+      "in_progress",
+      "done",
+      "blocked"
+    ]
   },
   "features": [
     {
@@ -180,6 +185,214 @@
         "No se carga Tailwind vía cdn.tailwindcss.com; se usa @astrojs/tailwind o CSS propio",
         "Todas las animaciones (typewriter, parallax, fade-in) respetan prefers-reduced-motion",
         "init.ps1 sigue verde"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 14,
+      "name": "redesign_tokens_typography",
+      "title": "Phase 1 — Sistema de tokens + tipografía editorial (Layout.astro)",
+      "description": "Reemplazar el bloque de tokens neón de Layout.astro por el CSS token system de docs/design/redesign_advisory_spec.md: neutrals (papel marfil), navy (tinta), burgundy/olive/forest (acentos), alias --accent* vía [data-accent], escala tipográfica 1.25, espaciado 8px, radius 2px. Cargar Source Serif 4 + IBM Plex Sans + IBM Plex Mono. Mantener el bloque prefers-reduced-motion.",
+      "acceptance": [
+        "Layout.astro define todos los tokens de la spec (--paper*, --ink*, --burgundy*, --olive*, --forest*, --accent*, --step-*, --space-*, --radius, --measure)",
+        "Los alias --accent* se resuelven vía [data-accent='burgundy'|'olive'|'forest']; el default es navy/neutro",
+        "Se cargan las 3 familias tipográficas (sin Plus Jakarta/Be Vietnam/Playfair/JetBrains); Tailwind CDN no",
+        "Ningún hex de marca fuera de la tabla de tokens de la spec",
+        "Se conserva el bloque prefers-reduced-motion global",
+        "init.ps1 verde y npm test --prefix frontend-astro pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 15,
+      "name": "redesign_layout_primitives",
+      "title": "Phase 1 — Layout primitives (grid, medida, divisores)",
+      "description": "Primitivos de layout editorial reusables: contenedor grid 12-col (max 1200px), medida de prosa 68ch, ritmo de espaciado, componente SectionDivider (filete 1px + eyebrow mono en --accent) y utilidades de hairline. Todo a la izquierda, sin centrar prosa.",
+      "acceptance": [
+        "Existe un Container/grid de 12 columnas con max-width 1200px y gutters de la escala",
+        "La prosa se limita a --measure (68ch) y se alinea a la izquierda",
+        "SectionDivider renderiza filete 1px (--ink-rule) + eyebrow mono en --accent",
+        "Solo consume tokens de la spec; sin hex sueltos, sin sombras tipo glow",
+        "tests/ valida render/estructura de SectionDivider y del Container",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 16,
+      "name": "redesign_nav_footer",
+      "title": "Phase 2 — TopNavigation (6 enlaces) + Footer",
+      "description": "Reescribir Nav.astro y Footer.astro al registro consultora. Nav: wordmark 'Bit Guru · Asesoria Estrategica' + EXACTAMENTE 6 enlaces (Areas de Practica, Metodologia, Memos, Archivo, La Firma, Admision) con estado activo; sticky discreto sin glow. Footer: directorio de secciones, disclaimer cinico, firma del socio, sin anio fijo.",
+      "acceptance": [
+        "La navegacion expone exactamente 6 enlaces en el orden de la spec; el wordmark enlaza a /",
+        "El enlace de la ruta actual marca estado activo accesible (aria-current)",
+        "Footer incluye disclaimer cinico-institucional y firma del Socio Fundador; sin anio o '(c) sin fecha'",
+        "Solo tokens de la spec; sin gradiente/glow/dark mode",
+        "tests/ valida que el nav contiene exactamente 6 enlaces y sus rutas",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 17,
+      "name": "redesign_editorial_components_a",
+      "title": "Phase 2 — Componentes editoriales: EditorialHero + PullQuote",
+      "description": "EditorialHero (eyebrow mono + H1 serif + deck + 1 CTA, alineado a la izquierda, sin imagen de fondo) y PullQuote (cita serif grande con filete de acento a la izquierda). Consumen solo --accent*/--ink*/--paper*.",
+      "acceptance": [
+        "EditorialHero acepta eyebrow, titulo, deck y un CTA opcional; sin imagen de fondo ni centrado",
+        "PullQuote renderiza cita serif con filete de acento a la izquierda",
+        "Ambos usan solo tokens de la spec y respetan jerarquia editorial",
+        "tests/ valida render y props de ambos componentes",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 18,
+      "name": "redesign_editorial_components_b",
+      "title": "Phase 2 — Componentes: InsightCard + MetricTable + PartnerBiographyBlock",
+      "description": "InsightCard (eyebrow + titulo + extracto + fecha mono), MetricTable (tabla seca con hairlines, banda --ink-wash, numeros en mono, semantica de tabla real) y PartnerBiographyBlock (bio + retrato no-facial a una tinta).",
+      "acceptance": [
+        "InsightCard renderiza eyebrow, titulo, extracto y fecha mono",
+        "MetricTable usa <table>/<th scope>/<caption> reales con hairlines y banda --ink-wash; numeros en --font-mono",
+        "PartnerBiographyBlock usa retrato no-facial (SVG/sello a una tinta), sin rostro ni fotorrealismo",
+        "Solo tokens de la spec; sin hex sueltos",
+        "tests/ valida estructura semantica de MetricTable y render de las tarjetas",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 19,
+      "name": "redesign_page_home",
+      "title": "Phase 3 — Inicio (/): Partner Letter · About · 3 Insights · Principal Portrait",
+      "description": "Reescribir index.astro con EXACTAMENTE 4 bloques en orden: Partner Letter (EditorialHero + carta serif firmada), About the Firm (SectionDivider + parrafo institucional), 3 Featured Insights (exactamente 3 InsightCard) y Principal Portrait (PartnerBiographyBlock no-facial). Acento neutro (Navy), sin familia de acento.",
+      "acceptance": [
+        "El home contiene exactamente esos 4 bloques en ese orden, ni mas ni menos",
+        "Hay exactamente 3 InsightCard",
+        "Pagina en registro consultora (usted, deadpan) y voz canonica",
+        "Sin familia de acento (solo Navy + Neutrals); sin elemento prohibido",
+        "tests/ valida la presencia de los 4 bloques y el conteo de 3 insights",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 20,
+      "name": "redesign_page_practica",
+      "title": "Phase 3 — Areas de Practica (/practica): ServiceCard + FrameworkDiagram",
+      "description": "Pagina /practica con acento Burgundy. Rejilla de ServiceCard (lineas de servicio ficticias derivadas de PERSONA §5, copy deadpan) + FrameworkDiagram a dos tintas (--ink + --accent) que conecta areas con el marco de los 22 arcanos.",
+      "acceptance": [
+        "body data-accent='burgundy'; una sola familia de acento en la pagina",
+        "ServiceCard lista lineas de servicio con descripcion deadpan y entregables",
+        "FrameworkDiagram es geometrico a dos colores, sin gradiente ni sombra",
+        "Solo tokens de la spec; WCAG AA",
+        "tests/ valida render de la pagina y de ServiceCard",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 21,
+      "name": "redesign_page_metodologia",
+      "title": "Phase 3 — Metodologia (/metodologia): Marco de los 22 Arcanos",
+      "description": "Pagina /metodologia con acento Forest. WhitePaperLayout que presenta los 22 arcanos de lib/tarot.ts como las 22 dimensiones diagnosticas del marco propietario (sin renombrar arcanos; citar codigo romano en mono) + TwoColorDiagram del marco completo.",
+      "acceptance": [
+        "body data-accent='forest'; una sola familia de acento",
+        "Los 22 arcanos provienen de lib/tarot.ts (no se renombran) y se reencuadran como dimensiones",
+        "WhitePaperLayout con portada, secciones numeradas e indice; TwoColorDiagram a dos tintas",
+        "No se modifica lib/tarot.ts ni ningun endpoint",
+        "tests/ valida que se renderizan las 22 dimensiones desde lib/tarot.ts",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 22,
+      "name": "redesign_page_memos",
+      "title": "Phase 4 — Memos Trimestrales (/memos): MemoCard + QuarterlyArchive",
+      "description": "Pagina /memos con acento Olive. QuarterlyArchive (indice cronologico por trimestre, lista hairline) de MemoCard. Cada memo se nutre de GET /api/wisdom-tweet; epigrafes opcionales de GET /api/morpheus-quotes. Reencuadre 'memo de la firma'.",
+      "acceptance": [
+        "body data-accent='olive'; una sola familia de acento",
+        "MemoCard consume /api/wisdom-tweet; epigrafes opcionales de /api/morpheus-quotes (solo lectura, sin tocar los endpoints)",
+        "QuarterlyArchive agrupa por trimestre con numeros de memo en mono",
+        "Estados de carga/error con microcopy de registro consultora",
+        "tests/ mockea el fetch y valida render del archivo y MemoCard",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 23,
+      "name": "redesign_page_archivo",
+      "title": "Phase 4 — Archivo de Compromisos (/archivo): EngagementCard + OutcomeMetricsTable",
+      "description": "Pagina /archivo con acento Burgundy. Rejilla de EngagementCard (casos ficticios, sectores absurdos) que abren a OutcomeMetricsTable con metricas deadpan. Contenido editorial estatico.",
+      "acceptance": [
+        "body data-accent='burgundy'; una sola familia de acento",
+        "EngagementCard muestra sector ficticio, titulo y metrica destacada",
+        "OutcomeMetricsTable usa semantica de tabla real con numeros en mono",
+        "Copy en registro consultora; sin elemento prohibido",
+        "tests/ valida render de EngagementCard y OutcomeMetricsTable",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 24,
+      "name": "redesign_page_la_firma",
+      "title": "Phase 4 — Sobre la Firma (/la-firma)",
+      "description": "Pagina /la-firma con acento Forest. Historia institucional = lore de PERSONA §2 reencuadrado en corporativo sin romper el misterio (§2 reglas) + PartnerBiographyBlock del Socio Fundador + principios de la firma en PullQuotes.",
+      "acceptance": [
+        "body data-accent='forest'; una sola familia de acento",
+        "El relato respeta las reglas de uso del backstory (§2): no explica la migracion tecnica, no se identifica con tradicion especifica",
+        "Incluye PartnerBiographyBlock no-facial y principios en PullQuote",
+        "Solo tokens de la spec; WCAG AA",
+        "tests/ valida render de la pagina",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 25,
+      "name": "redesign_page_admision",
+      "title": "Phase 4 — Admision de Clientes (/admision): IntakeForm + Confirmation/Error",
+      "description": "Pagina /admision con acento Olive. IntakeForm donde el cliente describe su 'problema estrategico'; al enviar invoca POST /api/reading (diagnostico preliminar = 3 arcanos + interpretacion) o POST /api/pregunta (consulta al socio). ConfirmationState y ErrorState con copy de registro. Accesibilidad de formulario completa.",
+      "acceptance": [
+        "body data-accent='olive'; una sola familia de acento",
+        "IntakeForm cablea POST /api/reading y/o /api/pregunta (sin modificar los endpoints)",
+        "Cada campo con <label> asociado, errores con aria-describedby/aria-invalid, foco visible",
+        "ConfirmationState (role=status) y ErrorState (role=alert) con microcopy cinico-institucional",
+        "tests/ mockea el POST y valida estados de exito/error y accesibilidad del form",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 26,
+      "name": "redesign_audits_cleanup",
+      "title": "Phase 5 — Auditorias (a11y/motion/palette) + limpieza de UI neon obsoleta",
+      "description": "Auditoria final: WCAG AA en todas las paginas, motion audit (sin parallax/typewriter/glow; prefers-reduced-motion OK), palette audit (cero hex fuera de tokens, una familia de acento por pagina, sin gradiente/glow/dark mode). Eliminar paginas y componentes neon obsoletos (zoltar, oraculo, mini-oraculo, hoy, sobre, quejas; Hero/TarotSection/Consulta/Sabiduria viejos) que ya no esten en el site map.",
+      "acceptance": [
+        "Todas las paginas pasan WCAG AA (contraste, foco, landmarks, headings, formularios)",
+        "Motion audit: sin animacion prohibida; toda animacion se desactiva con prefers-reduced-motion",
+        "Palette audit: ningun hex de marca fuera de los tokens; cada pagina usa una sola familia de acento",
+        "Eliminados los archivos de UI neon que no pertenecen al site map de la spec",
+        "Se cumplen todos los ACCEPTANCE CRITERIA y la DEFINITION OF DONE de la spec",
+        "init.ps1 verde y npm test pasa"
+      ],
+      "status": "done"
+    },
+    {
+      "id": 27,
+      "name": "fix_gemini_model_deprecated",
+      "title": "Fix: modelo Gemini gemini-2.0-flash deprecado (404) -> gemini-2.5-flash",
+      "description": "El smoke con GEMINI_API_KEY real (2026-06-12) revelo que DEFAULT_MODEL=gemini-2.0-flash en lib/gemini.ts devuelve 404 NOT_FOUND (Google lo retiro para generateContent). Tira los 4 endpoints Gemini (reading, pregunta, wisdom-tweet, fan-response) y por ende el flujo IntakeForm de /admision. Actualizar DEFAULT_MODEL a gemini-2.5-flash (estable GA, verificado funcionando con la key) + comentario; ajustar el test que fija el id del modelo.",
+      "acceptance": [
+        "DEFAULT_MODEL en lib/gemini.ts = gemini-2.5-flash (verificado con generateContent real)",
+        "Comentario del modelo actualizado (ya no afirma que gemini-2.0-flash es canonico vigente)",
+        "tests/lib/gemini.test.ts ajustado al nuevo id sin perder cobertura del wrapper",
+        "init.ps1 verde y npm test pasa",
+        "Smoke manual: POST /api/reading y /api/pregunta devuelven 200 con tono del Guru (lo re-verifica el leader contra Gemini real)"
       ],
       "status": "done"
     }

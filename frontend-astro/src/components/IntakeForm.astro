@@ -1,0 +1,308 @@
+---
+// src/components/IntakeForm.astro — feature 25 (redesign_page_admision, Phase 4).
+// Formulario de admisión (docs/design/redesign_advisory_spec.md
+// § REQUIRED COMPONENTS "IntakeForm — formulario de admisión (campos de
+// 'evaluación preliminar'). Labels visibles, ayudas, estados de foco" +
+// § ACCESSIBILITY CHECKLIST "IntakeForm: <label> asociado a cada campo,
+// aria-describedby, aria-invalid, :focus-visible claro" + "ConfirmationState /
+// ErrorState con role='status' / role='alert' y aria-live").
+//
+// El cliente describe su "problema estratégico" y elige el tipo de consulta:
+//   - Diagnóstico preliminar → POST /api/reading (3 arcanos + interpretación).
+//   - Consulta al Socio      → POST /api/pregunta (respuesta libre).
+// El cableado vive en utils/admision-client.ts (fetch inyectable, microcopy como
+// única fuente de verdad). Los endpoints NO se modifican: solo se consumen.
+//
+// Funciona SIN JS: el <form method="post" action="/api/reading"> hace POST
+// nativo al endpoint por defecto; el JS sólo mejora la experiencia (validación
+// in-place + estados accesibles). Registro consultora (usted, deadpan). Consume
+// SOLO tokens de Layout.astro (--accent*, --ink*, --paper*, --space-*, --step-*,
+// --font-*, --radius, --measure). Cero hex de marca, sin gradiente, sin
+// glow/box-shadow luminosa, sin dark mode, sin emoji.
+import {
+  READING_ENDPOINT,
+  ADMISION_LOADING_TEXT,
+  ADMISION_SUCCESS_TEXT,
+  ADMISION_ERROR_TEXT,
+  ADMISION_REQUIRED_TEXT,
+} from "../utils/admision-client";
+---
+
+<form
+  class="intake-form"
+  data-intake-form
+  data-intake-state="idle"
+  method="post"
+  action={READING_ENDPOINT}
+  novalidate
+>
+  <fieldset class="intake-group">
+    <legend class="intake-legend">Tipo de consulta</legend>
+    <p class="intake-help" id="tipo-help">
+      Elija el alcance del expediente. Ambos caminos terminan en una conclusión
+      que usted no pidió pero merecía.
+    </p>
+    <div class="intake-options" aria-describedby="tipo-help">
+      <label class="intake-option">
+        <input type="radio" name="tipo" value="diagnostico" checked />
+        <span>Diagnóstico preliminar (tres arcanos y su interpretación)</span>
+      </label>
+      <label class="intake-option">
+        <input type="radio" name="tipo" value="consulta" />
+        <span>Consulta al Socio (una pregunta directa, una respuesta seca)</span>
+      </label>
+    </div>
+  </fieldset>
+
+  <div class="intake-field">
+    <label class="intake-label" for="problema">Su problema estratégico</label>
+    <p class="intake-help" id="problema-help">
+      Describa la situación que ya agotó las soluciones racionales. Sea concreto;
+      el Oráculo cobra por adjetivo.
+    </p>
+    <textarea
+      class="intake-textarea"
+      id="problema"
+      name="pregunta"
+      rows="5"
+      required
+      aria-required="true"
+      aria-invalid="false"
+      aria-describedby="problema-help problema-error"
+      data-intake-problema></textarea>
+    <p
+      class="intake-field-error"
+      id="problema-error"
+      data-intake-field-error
+      hidden
+    >
+      {ADMISION_REQUIRED_TEXT}
+    </p>
+  </div>
+
+  <div class="intake-actions">
+    <button class="intake-submit" type="submit">
+      Solicitar evaluación preliminar
+    </button>
+  </div>
+
+  <p
+    class="intake-status"
+    data-intake-status
+    role="status"
+    aria-live="polite"
+    hidden
+  >
+    {ADMISION_LOADING_TEXT}
+  </p>
+
+  <div
+    class="intake-confirm"
+    data-intake-confirm
+    role="status"
+    aria-live="polite"
+    hidden
+  >
+    <p class="intake-confirm-lead">{ADMISION_SUCCESS_TEXT}</p>
+    <ul class="intake-arcanos" data-intake-arcanos hidden></ul>
+    <p class="intake-veredicto" data-intake-veredicto></p>
+  </div>
+
+  <p class="intake-error" data-intake-error role="alert" hidden>
+    {ADMISION_ERROR_TEXT}
+  </p>
+</form>
+
+<style>
+  /* Formulario alineado a la izquierda, limitado a la medida de lectura. Consume
+     SOLO tokens; cero hex de marca, sin sombra ni efecto prohibido. */
+  .intake-form {
+    text-align: left;
+    max-width: var(--measure);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+
+  .intake-group {
+    border: 1px solid var(--ink-rule);
+    border-radius: var(--radius);
+    padding: var(--space-5);
+    margin: 0;
+  }
+
+  .intake-legend {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    padding-inline: var(--space-2);
+  }
+
+  .intake-help {
+    margin: var(--space-2) 0 0;
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+
+  .intake-options {
+    margin-top: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .intake-option {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    line-height: 1.5;
+    color: var(--ink);
+    cursor: pointer;
+  }
+
+  .intake-option input {
+    margin-top: 0.2em;
+    accent-color: var(--accent);
+  }
+
+  .intake-option input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .intake-field {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .intake-label {
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--ink-deep);
+  }
+
+  .intake-textarea {
+    margin-top: var(--space-3);
+    width: 100%;
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink);
+    background: var(--paper-pure);
+    border: 1px solid var(--ink-rule);
+    border-radius: var(--radius);
+    padding: var(--space-4);
+    resize: vertical;
+  }
+
+  .intake-textarea:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-color: var(--accent);
+  }
+
+  /* Estado inválido: el borde lo refuerza el acento; el texto del error (abajo)
+     porta la información, no el color solo (spec § ACCESSIBILITY). */
+  .intake-textarea[aria-invalid="true"] {
+    border-color: var(--accent-deep);
+  }
+
+  .intake-field-error {
+    margin: var(--space-3) 0 0;
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    line-height: 1.6;
+    color: var(--accent-deep);
+  }
+
+  .intake-actions {
+    margin: 0;
+  }
+
+  /* Botón sobrio de borde recto; foco visible; sin glow. Color por --accent. */
+  .intake-submit {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--paper-pure);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-5);
+    cursor: pointer;
+    transition: background-color 150ms ease-out, border-color 150ms ease-out;
+  }
+
+  .intake-submit:hover {
+    background: var(--accent-bright);
+    border-color: var(--accent-bright);
+  }
+
+  .intake-submit:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Estado de carga: nota provisional, filete de acento a la izquierda. */
+  .intake-status {
+    margin: 0;
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--accent);
+    font-family: var(--font-sans);
+    font-style: italic;
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+
+  /* Confirmación: filete de acento, prosa serif. */
+  .intake-confirm {
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--accent);
+  }
+
+  .intake-confirm-lead {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink-deep);
+  }
+
+  .intake-arcanos {
+    margin: var(--space-4) 0 0;
+    padding-left: var(--space-5);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    color: var(--accent);
+  }
+
+  .intake-veredicto {
+    margin: var(--space-4) 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  /* Error: institucional, portado por la familia de acento de la página. */
+  .intake-error {
+    margin: 0;
+    padding-left: var(--space-4);
+    border-left: 2px solid var(--accent);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--accent-deep);
+  }
+</style>

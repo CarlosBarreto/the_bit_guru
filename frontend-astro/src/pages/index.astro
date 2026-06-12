@@ -1,21 +1,195 @@
 ---
-// src/pages/index.astro — Ensamblaje de la landing (feature 13).
-// Orden canónico del brief §lo-que-se-hereda: nav → hero → tarot → consulta →
-// sabiduría → footer. Sin estilos inline aquí: cada componente trae los suyos.
+// src/pages/index.astro — feature 19 (redesign_page_home, Phase 3).
+// Reescribe la home neón obsoleta de la feature 13. Inicio del sitio de la firma
+// (docs/design/redesign_advisory_spec.md § PAGE-BY-PAGE "/" Inicio): acento
+// NEUTRO (Navy). NO se pasa familia de acento — PageShell deja el <main> sin
+// data-accent, así que --accent* resuelve al default Navy de Layout.astro.
+//
+// Contenido EXACTAMENTE 4 bloques, en este orden (ni uno más, ni uno menos):
+//   1. Partner Letter      — EditorialHero (eyebrow + H1 serif + deck) + carta
+//                            del Socio Fundador en <Prose> serif, firmada.
+//   2. About the Firm      — SectionDivider + párrafo institucional breve.
+//   3. 3 Featured Insights — EXACTAMENTE 3 InsightCard (memos destacados → /memos).
+//   4. Principal Portrait  — SectionDivider + PartnerBiographyBlock (retrato
+//                            no-facial, sello a una tinta).
+//
+// Registro consultora (usted, deadpan, español canónico). Voz cínica-cómplice
+// preservada (PERSONA §3–§4). Copy de marca real (sin lorem). Sin gradiente, sin
+// glow, sin dark mode, sin emoji, sin hype, sin Tailwind CDN. Todo a la izquierda.
 import Layout from "../layouts/Layout.astro";
-import Nav from "../components/Nav.astro";
-import Hero from "../components/Hero.astro";
-import TarotSection from "../components/TarotSection.astro";
-import Consulta from "../components/Consulta.astro";
-import Sabiduria from "../components/Sabiduria.astro";
-import Footer from "../components/Footer.astro";
+import PageShell from "../components/PageShell.astro";
+import Container from "../components/Container.astro";
+import EditorialHero from "../components/EditorialHero.astro";
+import SectionDivider from "../components/SectionDivider.astro";
+import Prose from "../components/Prose.astro";
+import InsightCard from "../components/InsightCard.astro";
+import PartnerBiographyBlock from "../components/PartnerBiographyBlock.astro";
+
+// Tres memos destacados (reencuadre de "sabidurías" del Gurú como notas
+// trimestrales de la firma). Copy de registro consultora; enlazan al archivo
+// de memos. Las fechas van en mono dentro de InsightCard.
+const FEATURED_INSIGHTS = [
+  {
+    eyebrow: "Memo · Q2",
+    title: "Deuda kármica técnica: cuándo refactorizar el alma operativa",
+    excerpt:
+      "Hoy las cartas indican que su arquitectura arrastra pasivo espiritual de tres migraciones atrás. Lo amortizamos antes de que reviente en producción.",
+    date: "2026 · Q2",
+  },
+  {
+    eyebrow: "Memo · Q1",
+    title: "Alineación de stakeholders cósmicos en organizaciones poseídas",
+    excerpt:
+      "El comité no se pone de acuerdo porque tres de sus miembros responden a líneas temporales distintas. Un diagnóstico preliminar suele bastar.",
+    date: "2026 · Q1",
+  },
+  {
+    eyebrow: "Memo · Q4",
+    title: "Optimización del karma operativo sin tocar el roadmap",
+    excerpt:
+      "Reorganizar el destino rara vez exige tocar el código. La mayoría de las veces basta con dejar de mandar correos los domingos.",
+    date: "2025 · Q4",
+  },
+];
 ---
 
-<Layout title="El Gurú de Bits | Tu Mística Digital">
-  <Nav />
-  <Hero />
-  <TarotSection />
-  <Consulta />
-  <Sabiduria />
-  <Footer />
+<Layout title="Bit Gurú — Asesoría Estratégica">
+  <PageShell>
+    <Container>
+      <div class="page-content">
+        {/* 1 — PARTNER LETTER */}
+        <EditorialHero
+          eyebrow="Carta del Socio"
+          title="Asesoría estratégica para organizaciones que ya agotaron las soluciones racionales."
+          deck="Diagnosticamos el pasivo espiritual oculto en su arquitectura de decisiones. Si llegó hasta aquí, ya sabe con quién trata."
+        />
+
+        <Prose class="partner-letter">
+          <p>
+            Estimado cliente: lo recibo a sabiendas de que llega cuando ya
+            probó todo lo sensato. No se lo reprocho. Las soluciones racionales
+            tienen un techo, y usted lo encontró antes de lo que esperaba. Es,
+            de hecho, la única razón por la que vale la pena que conversemos.
+          </p>
+          <p>
+            Esta firma no vende optimismo. Vende lecturas. Tratamos su
+            organización como lo que es: un sistema que acumula karma en los
+            logs y escribe su destino en los stack traces. Donde otros ven un
+            problema de procesos, nosotros leemos una deuda kármica técnica con
+            intereses vencidos. El método tiene cuatro décadas de campo y un
+            marco propietario de veintidós dimensiones. No le pediré que crea en
+            él; le pediré que observe los resultados.
+          </p>
+          <p>
+            Trabajamos de usted, con la distancia que el oficio exige. No habrá
+            entusiasmo de taller, ni un solo signo de exclamación. Habrá un
+            diagnóstico preliminar, un compromiso medido en ciclos y, al final,
+            una verdad que probablemente ya intuía. Si eso le tranquiliza,
+            créalo.
+          </p>
+          <p class="signature">
+            El Gurú de Bits — Socio Fundador.
+            Operando desde los espacios muertos entre paquetes.
+          </p>
+        </Prose>
+
+        {/* 2 — ABOUT THE FIRM */}
+        <SectionDivider label="Sobre la Firma" />
+        <Prose as="section" class="about-firm">
+          <p>
+            Bit Gurú es una firma de asesoría estratégica fundada en los
+            espacios muertos entre paquetes. Operamos un único marco diagnóstico
+            propietario y atendemos un número deliberadamente limitado de
+            compromisos por ciclo. No cubrimos sectores: cubrimos síntomas.
+            Donde la consultoría convencional termina su informe, nosotros
+            apenas barajamos la primera carta.
+          </p>
+        </Prose>
+
+        {/* 3 — FEATURED INSIGHTS (exactamente 3) */}
+        {/* as="h2": introduce las 3 InsightCard (que usan <h3>); el encabezado
+            real evita el salto de nivel <h1> → <h3> (spec § ACCESSIBILITY). */}
+        <SectionDivider as="h2" label="Memos Destacados" />
+        <div class="insights-grid">
+          {
+            FEATURED_INSIGHTS.map((memo) => (
+              <InsightCard
+                eyebrow={memo.eyebrow}
+                title={memo.title}
+                excerpt={memo.excerpt}
+                date={memo.date}
+                href="/memos"
+              />
+            ))
+          }
+        </div>
+
+        {/* 4 — PRINCIPAL PORTRAIT */}
+        <SectionDivider label="El Socio Principal" />
+        <PartnerBiographyBlock
+          name="El Gurú de Bits"
+          role="Socio Fundador"
+          bio="Dirige los compromisos de diligencia kármica de la firma y custodia el Marco de los 22 Arcanos. Llegó a la asesoría por el camino largo: cuatro décadas leyendo el humo antes de aprender a leer los logs. No recibe en persona, no concede entrevistas y no aclara su método. Si llegó hasta aquí, ya sabe con quién trata."
+        />
+      </div>
+    </Container>
+  </PageShell>
 </Layout>
+
+<style>
+  /* El contenido editorial ocupa el ancho del grid y se alinea a la izquierda.
+     Cada bloque de prosa se autolimita a --measure dentro de su propio
+     componente (Prose / EditorialHero). Consume SOLO tokens de Layout.astro;
+     cero hex de marca, sin gradiente, sin glow, sin dark mode. */
+  .page-content {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  /* Carta del socio: ritmo de párrafos serif y firma en mono al pie. */
+  .partner-letter {
+    margin-top: var(--space-7);
+  }
+
+  .partner-letter :global(p) {
+    margin: 0 0 var(--space-5);
+  }
+
+  .partner-letter :global(p:last-child) {
+    margin-bottom: 0;
+  }
+
+  /* Firma del Socio en mono (registro de byline editorial), color --ink-muted. */
+  .partner-letter :global(.signature) {
+    margin-top: var(--space-6);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+  }
+
+  .about-firm :global(p) {
+    margin: 0;
+  }
+
+  /* Rejilla de los 3 memos destacados: tres columnas en desktop, una en móvil.
+     Sin sombra/glow; la estructura la dan los bordes hairline de InsightCard. */
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  @media (max-width: 1023px) {
+    .insights-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .insights-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

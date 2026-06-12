@@ -37,11 +37,11 @@ describe("generate", () => {
     expect(constructorMock).toHaveBeenCalledWith({ apiKey: "test-key-123" });
   });
 
-  it("usa el modelo por defecto coherente con el legacy PHP", async () => {
+  it("usa el modelo por defecto vigente (gemini-2.5-flash)", async () => {
     await generate("hola");
-    expect(DEFAULT_MODEL).toBe("gemini-2.0-flash");
+    expect(DEFAULT_MODEL).toBe("gemini-2.5-flash");
     const call = generateContentMock.mock.calls[0][0];
-    expect(call.model).toBe("gemini-2.0-flash");
+    expect(call.model).toBe("gemini-2.5-flash");
   });
 
   it("pasa el prompt como contents al SDK", async () => {
@@ -51,9 +51,10 @@ describe("generate", () => {
   });
 
   it("permite sobreescribir el modelo vía opts", async () => {
-    await generate("hola", { model: "gemini-2.5-flash" });
+    await generate("hola", { model: "gemini-2.0-flash" });
     const call = generateContentMock.mock.calls[0][0];
-    expect(call.model).toBe("gemini-2.5-flash");
+    expect(call.model).toBe("gemini-2.0-flash");
+    expect(call.model).not.toBe(DEFAULT_MODEL);
   });
 
   it("propaga systemInstruction, temperature y maxOutputTokens al config", async () => {

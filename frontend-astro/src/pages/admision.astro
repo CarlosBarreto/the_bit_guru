@@ -1,0 +1,76 @@
+---
+// src/pages/admision.astro — feature 25 (redesign_page_admision, Phase 4).
+// Admisión de Clientes (docs/design/redesign_advisory_spec.md § PAGE-BY-PAGE
+// "/admision" / SITE MAP): acento OLIVE. PageShell deja el remapeo --accent* en
+// el <main data-accent="olive">, así que toda la página usa UNA sola familia de
+// acento (nav/footer siguen Navy porque PageShell los pone fuera del <main>).
+//
+// Estructura editorial server-rendered que funciona sin JS:
+//   EditorialHero ("Solicitar evaluación preliminar") → SectionDivider + nota de
+//   registro → IntakeForm (POST /api/reading | /api/pregunta). El IntakeForm se
+//   hidrata en el navegador (validación in-place + ConfirmationState/ErrorState
+//   accesibles) vía utils/admision-client.ts. Los endpoints NO se modifican.
+//
+// Registro consultora (usted, deadpan, español canónico, PERSONA §4 + spec
+// § VOICE & COPY). Sin gradiente, sin glow, sin dark mode, sin emoji, sin hype,
+// sin lorem. Todo a la izquierda.
+import Layout from "../layouts/Layout.astro";
+import PageShell from "../components/PageShell.astro";
+import Container from "../components/Container.astro";
+import EditorialHero from "../components/EditorialHero.astro";
+import SectionDivider from "../components/SectionDivider.astro";
+import Prose from "../components/Prose.astro";
+import IntakeForm from "../components/IntakeForm.astro";
+---
+
+<Layout title="Admisión de Clientes — Bit Gurú">
+  <PageShell accent="olive">
+    <Container>
+      <div class="page-content">
+        <EditorialHero
+          eyebrow="Admisión de Clientes"
+          title="Solicitar evaluación preliminar"
+          deck="La firma admite un número limitado de compromisos por ciclo lunar. Antes de cualquier relación contractual, el Socio Fundador realiza un diagnóstico preliminar sin costo. El costo, como de costumbre, viene después."
+        />
+
+        <SectionDivider label="Expediente de Admisión" />
+
+        <Prose class="intake-note">
+          <p>
+            Complete el formulario con la sobriedad que el caso amerita. El
+            diagnóstico preliminar consiste en tres dimensiones del Marco de los
+            22 Arcanos y una interpretación; si lo prefiere, puede dirigir una
+            consulta directa al Socio. Hoy las cartas indican que usted enviará
+            al menos un expediente, y si eso le tranquiliza, créalo.
+          </p>
+        </Prose>
+
+        <IntakeForm />
+      </div>
+    </Container>
+  </PageShell>
+</Layout>
+
+<script>
+  // Hidratación del IntakeForm: intercepta el submit, valida el problema
+  // estratégico y, según el tipo elegido, hace POST a /api/reading o
+  // /api/pregunta vía utils/admision-client.ts. Sin JS, el form hace POST
+  // nativo al endpoint por defecto. Solo consume los endpoints.
+  import { wireIntakeForm } from "../utils/admision-client";
+
+  wireIntakeForm(document);
+</script>
+
+<style>
+  /* El contenido editorial ocupa el ancho del grid y se alinea a la izquierda.
+     Consume SOLO tokens de Layout.astro; cero hex de marca, sin sombra ni
+     efecto prohibido, sin dark mode. */
+  .page-content {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .page-content :global(.intake-note) {
+    margin-bottom: var(--space-7);
+  }
+</style>

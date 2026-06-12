@@ -1,0 +1,273 @@
+---
+// src/pages/metodologia.astro — feature 21 (redesign_page_metodologia, Phase 3).
+// Metodología de la firma (docs/design/redesign_advisory_spec.md § PAGE-BY-PAGE
+// "/metodologia" / SITE MAP): acento FOREST. PageShell deja el remapeo --accent*
+// en el <main data-accent="forest">, así que toda la página usa UNA sola familia
+// de acento (nav/footer siguen Navy porque PageShell los pone fuera del <main>).
+//
+// El documento es un white paper institucional (WhitePaperLayout): portada con
+// código de documento, índice y cinco secciones numeradas. Las 22 dimensiones
+// diagnósticas PROVIENEN de lib/tarot.ts (ARCANOS, canon PERSONA §7): se derivan
+// con ARCANOS.map() sin renombrar nada; el código romano se cita en --font-mono.
+// El marco completo se ilustra con TwoColorDiagram (dos tintas estrictas).
+//
+// Registro consultora (usted, deadpan, español canónico). Sin gradiente, sin
+// glow, sin dark mode, sin emoji, sin hype, sin lorem. Todo a la izquierda.
+import Layout from "../layouts/Layout.astro";
+import PageShell from "../components/PageShell.astro";
+import Container from "../components/Container.astro";
+import WhitePaperLayout from "../components/WhitePaperLayout.astro";
+import TwoColorDiagram from "../components/TwoColorDiagram.astro";
+import Prose from "../components/Prose.astro";
+import { ARCANOS } from "../lib/tarot";
+
+// Descripción deadpan de cada dimensión, keyed por el string CANÓNICO completo
+// de lib/tarot.ts (evidencia de que ningún arcano se renombra: la clave es el
+// canon literal). Jerga de consultoría weaponizada, registro de usted.
+const DIMENSION_NOTES: Record<string, string> = {
+  "0 - El Bit":
+    "Dimensión de origen. Mide la capacidad de su organización para distinguir entre encendido y apagado, competencia que la mayoría de los comités da por acreditada sin evidencia.",
+  "I - El Mago Cibernético":
+    "Evalúa la brecha entre lo que su equipo técnico declara posible en la junta de arranque y lo que efectivamente entrega antes del cierre del trimestre.",
+  "II - La Sacerdotisa de la Nube":
+    "Pondera cuánta información crítica de su negocio reside en una nube que nadie de su consejo sabría señalar en un mapa.",
+  "III - La Emperatriz del Jardín Digital":
+    "Mide la fertilidad de su ecosistema digital: cuántas iniciativas florecen y cuántas se siembran únicamente para la fotografía del kickoff.",
+  "IV - El Emperador de la Torre de Servidores":
+    "Diagnostica la concentración de poder en la persona que posee la única llave del cuarto de servidores. Usted sabe quién es.",
+  "IX - El Ermitaño del Metaverso":
+    "Cuantifica la inversión destinada a plataformas inmersivas que su propia dirección general visitó una vez y no volvió a abrir.",
+  "V - El Oráculo del Stream":
+    "Evalúa la proporción de decisiones estratégicas tomadas a partir de tableros en tiempo real que nadie ha auditado desde su implementación.",
+  "VI - Los Enlaces Gemelos":
+    "Mide la redundancia real de sus integraciones: dos sistemas que se sincronizan entre sí no constituyen un respaldo, por más que el proveedor insista.",
+  "VII - El Vehículo Autónomo":
+    "Pondera el grado de automatización que opera sin supervisión humana y sin que nadie recuerde quién la configuró.",
+  "VIII - La Justicia del Algoritmo":
+    "Evalúa la equidad de sus procesos automatizados, entendida como la distribución uniforme de los errores entre todas las áreas.",
+  "X - La Rueda de la Fortuna (404)":
+    "Mide la resiliencia de su operación ante el recurso no encontrado: páginas, archivos, responsables.",
+  "XI - La Fuerza del Híbrido":
+    "Diagnostica la sostenibilidad de su modelo híbrido, en el que la oficina y el hogar compiten por ser el lugar donde menos se trabaja.",
+  "XII - El Colgado de la Red":
+    "Cuantifica los procesos suspendidos en espera de una aprobación cuyo responsable dejó la empresa hace dos reestructuras.",
+  "XIII - La Muerte del Sistema":
+    "Evalúa la dignidad con la que su organización retira sus sistemas legados. La mayoría no los retira: los deja expirar en producción.",
+  "XIV - La Templanza del Flujo de Datos":
+    "Mide el equilibrio entre los datos que su organización captura y los que efectivamente utiliza. La proporción habitual no la favorece.",
+  "XIX - El Sol de Silicio":
+    "Pondera la exposición de su estrategia al optimismo importado de conferencias celebradas en climas más soleados que el suyo.",
+  "XV - El Demonio del Spam":
+    "Diagnostica el costo operativo de la comunicación interna que nadie solicitó, encabezada por los correos con copia a toda la dirección.",
+  "XVI - La Torre Caída":
+    "Evalúa su preparación ante la caída total del servicio: no si ocurrirá, sino qué tan presentable será el comunicado.",
+  "XVII - La Estrella de Neón":
+    "Mide la distancia entre la marca que su empresa proyecta en redes y la experiencia que recibe quien la contacta un viernes a las seis.",
+  "XVIII - La Luna del Espejismo":
+    "Cuantifica los espejismos de su hoja de ruta: entregables que todos ven acercarse y que nunca terminan de llegar.",
+  "XX - El Juicio del Código":
+    "Evalúa la severidad con la que su código será juzgado por la siguiente generación de desarrolladores. El veredicto histórico es unánime.",
+  "XXI - El Mundo del Metaverso":
+    "Dimensión de cierre. Mide la completitud del ciclo: toda transformación termina donde empezó, con un presupuesto nuevo.",
+};
+
+// Las 22 dimensiones se DERIVAN del canon, en su orden canónico, sin renombrar:
+// código romano (antes de " - ") + denominación canónica (después de " - ").
+const DIMENSIONS = ARCANOS.map((canonical) => {
+  const [code, ...rest] = canonical.split(" - ");
+  return {
+    canonical,
+    code,
+    name: rest.join(" - "),
+    note: DIMENSION_NOTES[canonical],
+  };
+});
+
+const SECTIONS = [
+  { id: "resumen-ejecutivo", title: "Resumen ejecutivo" },
+  {
+    id: "fundamento-metodologico",
+    title: "Fundamento metodológico",
+    note: "Ningún arcano fue renombrado durante la elaboración de este documento. El canon no se negocia.",
+  },
+  { id: "dimensiones-diagnosticas", title: "Las 22 dimensiones diagnósticas" },
+  {
+    id: "marco-completo",
+    title: "El marco completo",
+    note: "Diagrama a dos tintas. La firma considera que un tercer color sería especulativo.",
+  },
+  { id: "limitaciones-descargos", title: "Limitaciones y descargos" },
+];
+
+const META = [
+  { label: "Clasificación", value: "Distribución restringida" },
+  { label: "Práctica", value: "Diagnóstico Estratégico" },
+  { label: "Autor", value: "El Gurú de Bits — Socio Fundador" },
+  { label: "Vigencia", value: "Ciclo lunar en curso" },
+];
+---
+
+<Layout title="Metodología — Bit Gurú">
+  <PageShell accent="forest">
+    <Container>
+      <div class="page-content">
+        <WhitePaperLayout
+          code="BG/WP-001 · REV. 2"
+          title="El Marco de los 22 Arcanos™"
+          deck="Instrumento propietario de diagnóstico estratégico en veintidós dimensiones. Este documento describe su fundamento, su estructura y sus límites, en ese orden y sin entusiasmo."
+          meta={META}
+          sections={SECTIONS}
+        >
+          {/* 1 — RESUMEN EJECUTIVO */}
+          <Prose slot="resumen-ejecutivo">
+            <p>
+              Hoy las cartas indican que su organización ya fue evaluada con
+              instrumentos diseñados para otras organizaciones. Este documento
+              presenta la alternativa propietaria de la firma: el Marco de los
+              22 Arcanos™, un instrumento que examina veintidós dimensiones que
+              su consultora anterior no midió — en parte por falta de rigor, en
+              parte porque no sabía que existían.
+            </p>
+            <p>
+              El marco no promete resultados. Promete un diagnóstico. La
+              diferencia entre ambos conceptos sostiene a esta industria desde
+              hace décadas, y si eso le tranquiliza, créalo.
+            </p>
+          </Prose>
+
+          {/* 2 — FUNDAMENTO METODOLÓGICO */}
+          <Prose slot="fundamento-metodologico">
+            <p>
+              El marco se construyó sobre el canon de los veintidós arcanos
+              mayores del tarot cibernético, un corpus que antecede a la firma
+              y que la firma se limita a administrar. Cada arcano se reencuadra
+              como una dimensión de evaluación organizacional conservando su
+              código romano y su denominación canónica, tal como constan en el
+              registro de dominio del instrumento.
+            </p>
+            <p>
+              A diferencia de los marcos convencionales, el nuestro no se
+              calibró contra una muestra de empresas exitosas. Se calibró
+              contra el destino, que dispone de una muestra considerablemente
+              mayor.
+            </p>
+          </Prose>
+
+          {/* 3 — LAS 22 DIMENSIONES (data-driven desde ARCANOS) */}
+          <Fragment slot="dimensiones-diagnosticas">
+            <p class="dimension-intro">
+              A continuación se presentan las veintidós dimensiones en su orden
+              canónico. El código romano de cada dimensión es inmutable; su
+              presupuesto, no.
+            </p>
+            <ol class="dimension-list">
+              {
+                DIMENSIONS.map((dimension) => (
+                  <li class="dimension">
+                    <span class="dimension-code">ARCANO {dimension.code}</span>
+                    <h3 class="dimension-name">{dimension.name}</h3>
+                    <p class="dimension-note">{dimension.note}</p>
+                  </li>
+                ))
+              }
+            </ol>
+          </Fragment>
+
+          {/* 4 — EL MARCO COMPLETO (diagrama a dos tintas) */}
+          <Fragment slot="marco-completo">
+            <p class="diagram-intro">
+              La vista completa del marco ilustra la propiedad central del
+              instrumento: las veintidós dimensiones convergen, sin excepción,
+              en un único diagnóstico preliminar. Ningún cliente ha requerido
+              hasta la fecha el diagnóstico definitivo. Preferimos no especular
+              sobre los motivos.
+            </p>
+            <TwoColorDiagram dimensions={ARCANOS} />
+          </Fragment>
+
+          {/* 5 — LIMITACIONES Y DESCARGOS */}
+          <Prose slot="limitaciones-descargos">
+            <p>
+              Los resultados del marco se obtuvieron en líneas temporales
+              anteriores y no garantizan comportamientos equivalentes en la
+              suya. El marco no constituye asesoría financiera, legal ni
+              espiritual: constituye un documento.
+            </p>
+            <p>
+              La firma no se hace responsable de las decisiones que usted tome
+              a partir de este diagnóstico, ni de las que tome para evitarlo.
+              Cualquier coincidencia entre las dimensiones del marco y la
+              situación actual de su organización debe interpretarse como
+              evidencia de la validez del instrumento.
+            </p>
+          </Prose>
+        </WhitePaperLayout>
+      </div>
+    </Container>
+  </PageShell>
+</Layout>
+
+<style>
+  /* El contenido editorial ocupa el ancho del grid y se alinea a la izquierda.
+     Consume SOLO tokens de Layout.astro; cero hex de marca, sin gradiente, sin
+     glow, sin dark mode. */
+  .page-content {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  /* Párrafos introductorios de sección (serif, medida de lectura). */
+  .dimension-intro,
+  .diagram-intro {
+    margin: 0 0 var(--space-6);
+    max-width: var(--measure);
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  /* Lista de las 22 dimensiones: registro de instrumento (hairlines, código
+     romano en mono con acento, denominación canónica en serif). */
+  .dimension-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-width: var(--measure);
+  }
+
+  .dimension {
+    border-top: 1px solid var(--ink-rule);
+    padding-block: var(--space-5);
+  }
+
+  .dimension:last-child {
+    border-bottom: 1px solid var(--ink-rule);
+  }
+
+  .dimension-code {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .dimension-name {
+    margin: var(--space-2) 0 var(--space-3);
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    font-weight: 600;
+    line-height: 1.25;
+    color: var(--ink-deep);
+  }
+
+  .dimension-note {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+</style>

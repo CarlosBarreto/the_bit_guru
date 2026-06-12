@@ -1,8 +1,13 @@
 ---
 // src/layouts/Layout.astro
-// Fundación de la UI (feature 13). Define los tokens canónicos del brief §1 /
-// PERSONA §8, carga las 4 fuentes y el reset/base global. Los componentes del
-// lote paralelo SOLO consumen estas custom properties; no redefinen la paleta.
+// Fundación de la UI del rediseño (feature 14, Phase 1). Define el CSS token
+// system canónico de docs/design/redesign_advisory_spec.md § DESIGN TOKENS /
+// TYPOGRAPHY: papel editorial (neutrals), tinta navy (estructura global) y las
+// tres familias de acento (burgundy / olive / forest) expuestas a los
+// componentes vía los alias --accent* que cada página remapea con
+// <body data-accent="...">. Light-only: sin dark mode, sin gradientes, sin
+// glow/neón. Los componentes consumen SOLO --accent*, --ink*, --paper* y los
+// tokens tipográficos/de espaciado; no introducen otros hex.
 export interface Props {
   title: string;
 }
@@ -14,17 +19,18 @@ const { title } = Astro.props;
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="description" content="El Oráculo del Gurú de Bits — tarot cibernético en la era de la información." />
+    <meta name="description" content="Bit Gurú — Asesoría estratégica para organizaciones que ya agotaron las soluciones racionales." />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
 
-    <!-- Fuentes canónicas (brief §1). Google Fonts permitido; Tailwind por CDN NO. -->
+    <!-- Fuentes editoriales (spec § TYPOGRAPHY). Google Fonts permitido;
+         Tailwind por CDN NO. Solo Source Serif 4 + IBM Plex Sans + IBM Plex Mono. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Be+Vietnam+Pro:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,700;1,700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap"
       rel="stylesheet"
     />
   </head>
@@ -34,25 +40,99 @@ const { title } = Astro.props;
 </html>
 
 <style is:global>
-  /* ── Tokens canónicos (brief §1 + PERSONA §8). CONTRATO COMPARTIDO ──────────
-     morado = marca/primario · cyan = interactivo/místico · rosa = SOLO CTA de
-     tirada. Los componentes consumen estas variables; no introducen otros hex. */
+  /* ── CSS Token System (spec § DESIGN TOKENS / TYPOGRAPHY) — CONTRATO ─────────
+     Reemplaza el bloque de tokens neón obsoleto (feature 13). Las páginas
+     añaden SOLO el remapeo --accent* de su familia vía <body data-accent="...">.
+     Los componentes consumen únicamente --accent*, --ink*, --paper* y los
+     tokens tipográficos/de espaciado; nunca el hex crudo ni el nombre de
+     familia directamente. Cero hex de marca fuera de esta tabla. */
   :root {
-    --bg: #0a0a0f; /* negro profundo, fondo */
-    --surface-footer: #050508;
-    --surface-section: #15151e;
-    --surface-card: #1f1f2e; /* card de consulta */
-    --surface-hex: #2a2a40; /* cartas hex y botones secundarios */
-    --morado: #7b2cbf; /* MARCA / primario */
-    --morado-claro: #d4bbff; /* hover/highlight */
-    --cyan: #00f0ff; /* interactivo / místico */
-    --rosa: #ff2d95; /* CTA crítico: SOLO botón de tirada */
-    --texto: #e8e8f0; /* texto base */
-    --texto-fuerte: #ffffff;
-    --font-head: "Plus Jakarta Sans", system-ui, sans-serif;
-    --font-body: "Be Vietnam Pro", system-ui, sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, monospace;
-    --font-display: "Playfair Display", Georgia, serif;
+    /* NEUTRALS — papel y superficies (light-only) */
+    --paper: #f6f4ee;
+    --paper-pure: #ffffff;
+    --paper-shade: #edeae1;
+    --paper-deep: #e4e0d4;
+
+    /* NAVY — tinta y estructura (global) */
+    --ink-deep: #0b1b2d;
+    --ink: #16293b;
+    --ink-muted: #4b5965;
+    --ink-rule: #c7cfd6;
+    --ink-wash: #e7ebef;
+
+    /* BURGUNDY — acento A */
+    --burgundy-deep: #5e1325;
+    --burgundy: #7c1d33;
+    --burgundy-bright: #9a2a43;
+    --burgundy-wash: #f0e2e4;
+
+    /* OLIVE — acento B */
+    --olive-deep: #3a380f;
+    --olive: #54501a;
+    --olive-bright: #6e6826;
+    --olive-wash: #eceada;
+
+    /* FOREST — acento C */
+    --forest-deep: #0e3026;
+    --forest: #1a4636;
+    --forest-bright: #285e48;
+    --forest-wash: #dfeae4;
+
+    /* Acento por defecto (Inicio = neutro Navy) */
+    --accent-deep: var(--ink-deep);
+    --accent: var(--ink);
+    --accent-bright: var(--ink-deep);
+    --accent-wash: var(--ink-wash);
+
+    /* Tipografía */
+    --font-serif: "Source Serif 4", Georgia, "Times New Roman", serif;
+    --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+    /* Escala tipográfica (ratio 1.25, base 16px) */
+    --step--1: 0.8rem;
+    --step-0: 1rem;
+    --step-1: 1.25rem;
+    --step-2: 1.563rem;
+    --step-3: 1.953rem;
+    --step-4: 2.441rem;
+    --step-5: 3.052rem;
+
+    /* Espaciado (escala de 8px) */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+    --space-9: 96px;
+    --space-10: 128px;
+
+    /* Forma */
+    --radius: 2px;
+    --measure: 68ch;
+  }
+
+  /* Mapeo de acento por página — se aplica en <body data-accent="..."> */
+  [data-accent="burgundy"] {
+    --accent-deep: var(--burgundy-deep);
+    --accent: var(--burgundy);
+    --accent-bright: var(--burgundy-bright);
+    --accent-wash: var(--burgundy-wash);
+  }
+  [data-accent="olive"] {
+    --accent-deep: var(--olive-deep);
+    --accent: var(--olive);
+    --accent-bright: var(--olive-bright);
+    --accent-wash: var(--olive-wash);
+  }
+  [data-accent="forest"] {
+    --accent-deep: var(--forest-deep);
+    --accent: var(--forest);
+    --accent-bright: var(--forest-bright);
+    --accent-wash: var(--forest-wash);
   }
 
   *,
@@ -62,14 +142,14 @@ const { title } = Astro.props;
   }
 
   body {
-    background: var(--bg);
-    color: var(--texto);
-    font-family: var(--font-body);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
     margin: 0;
   }
 
-  /* Accesibilidad: los componentes (typewriter, parallax, fade-in) heredan la
-     desactivación de animaciones cuando el usuario lo prefiere (brief §nota). */
+  /* Accesibilidad: toda animación/transición se desactiva cuando el usuario lo
+     prefiere (spec § MOTION; bloque preservado del Layout previo). */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

@@ -34,25 +34,27 @@ describe("fundación UI (feature 13) — Container API (markup)", () => {
     expect(html).toContain("hola mortal");
   });
 
-  it("Layout carga la fuente display canónica (Playfair Display)", async () => {
+  it("Layout carga la fuente serif editorial canónica (Source Serif 4)", async () => {
     const container = await AstroContainer.create();
     const html = await container.renderToString(Layout, {
       props: { title: "test" },
       slots: { default: "" },
     });
-    expect(html).toContain("Playfair+Display");
-    // No debe arrastrar Tailwind por CDN (brief §notas técnicas).
+    expect(html).toContain("Source+Serif+4");
+    // No debe arrastrar Tailwind por CDN (HARD PROHIBITIONS de la spec).
     expect(html).not.toContain("cdn.tailwindcss.com");
   });
 });
 
-describe("fundación UI (feature 13) — source (tokens y CSS)", () => {
-  it("Layout define los tokens canónicos del brief §1 / PERSONA §8", () => {
+describe("fundación UI — source (tokens y CSS)", () => {
+  // El contrato exhaustivo de tokens vive en tests/layouts/layout-tokens.test.ts
+  // (feature 14). Aquí solo se confirma que la fundación migró al sistema
+  // editorial y que el bloque de accesibilidad se conserva.
+  it("Layout define los tokens editoriales canónicos de la spec", () => {
     const src = layoutSource.toLowerCase();
-    expect(src).toContain("--morado: #7b2cbf");
-    expect(src).toContain("--cyan: #00f0ff");
-    expect(src).toContain("--rosa: #ff2d95");
-    expect(src).toContain("--bg: #0a0a0f");
+    expect(src).toContain("--paper: #f6f4ee");
+    expect(src).toContain("--ink: #16293b");
+    expect(src).toContain("--accent: var(--ink)");
   });
 
   it("Layout incluye el bloque prefers-reduced-motion", () => {

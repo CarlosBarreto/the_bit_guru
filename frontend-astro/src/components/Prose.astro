@@ -1,0 +1,40 @@
+---
+// src/components/Prose.astro — feature 15 (redesign_layout_primitives).
+// Wrapper de medida de lectura (spec § TYPOGRAPHY / LAYOUT): limita el ancho de
+// un bloque de prosa larga a var(--measure) (68ch), lo alinea a la IZQUIERDA y
+// fija el line-height de cuerpo (1.6). Pensado para la carta del socio, memos,
+// casos y white papers. Consume SOLO tokens de Layout.astro; sin hex sueltos.
+//
+// Uso: <Prose> <p>...</p> </Prose>. Por defecto <div>; `as` cambia la etiqueta.
+export interface Props {
+  as?: string;
+  class?: string;
+}
+
+const { as = "div", class: className } = Astro.props;
+const Tag = as;
+---
+
+<Tag class:list={["prose", className]}>
+  <slot />
+</Tag>
+
+<style>
+  .prose {
+    max-width: var(--measure);
+    margin-inline: 0;
+    text-align: left;
+    line-height: 1.6;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    font-size: var(--step-0);
+  }
+
+  .prose > :first-child {
+    margin-top: 0;
+  }
+
+  .prose > :last-child {
+    margin-bottom: 0;
+  }
+</style>

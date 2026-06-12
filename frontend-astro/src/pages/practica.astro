@@ -1,0 +1,152 @@
+---
+// src/pages/practica.astro — feature 20 (redesign_page_practica, Phase 3).
+// Áreas de Práctica de la firma (docs/design/redesign_advisory_spec.md
+// § PAGE-BY-PAGE "/practica" / SITE MAP): acento BURGUNDY. PageShell deja el
+// remapeo --accent* en el <main data-accent="burgundy">, así que toda la página
+// usa UNA sola familia de acento (nav/footer siguen Navy porque PageShell los
+// pone fuera del <main>).
+//
+// Estructura:
+//   1. EditorialHero — eyebrow "Áreas de Práctica" + H1 + deck sobre las líneas
+//      de servicio.
+//   2. Rejilla de ServiceCard — líneas de servicio ficticias derivadas de los
+//      temas de PERSONA §5 (productividad tóxica, IA/cripto, espiritualidad
+//      wellness, deuda técnica), con copy deadpan y entregables.
+//   3. SectionDivider "El Marco" + FrameworkDiagram — diagrama a dos tintas que
+//      conecta las áreas con el Marco de los 22 Arcanos.
+//
+// Registro consultora (usted, deadpan, español canónico). Voz cínica-cómplice
+// preservada (PERSONA §3–§4). Copy de marca real (sin lorem). Sin gradiente, sin
+// glow, sin dark mode, sin emoji, sin hype, sin Tailwind CDN. Todo a la izquierda.
+import Layout from "../layouts/Layout.astro";
+import PageShell from "../components/PageShell.astro";
+import Container from "../components/Container.astro";
+import EditorialHero from "../components/EditorialHero.astro";
+import SectionDivider from "../components/SectionDivider.astro";
+import ServiceCard from "../components/ServiceCard.astro";
+import FrameworkDiagram from "../components/FrameworkDiagram.astro";
+
+// Líneas de servicio. Cada una reencuadra un tema de PERSONA §5 en jerga de
+// consultoría weaponizada (spec § VOICE & COPY). Descripción deadpan + tres
+// entregables secos por área.
+const SERVICE_LINES = [
+  {
+    title: "Diligencia Kármica",
+    description:
+      "Evaluamos el pasivo espiritual oculto en su arquitectura de decisiones. Donde su auditoría financiera ve cuentas en orden, nosotros leemos una deuda kármica con intereses vencidos desde tres migraciones atrás.",
+    deliverables: [
+      "Inventario del pasivo espiritual por línea de negocio",
+      "Mapa de responsabilidades cósmicas no provisionadas",
+      "Calendario de amortización en ciclos lunares",
+    ],
+  },
+  {
+    title: "Optimización del Karma Operativo",
+    description:
+      "Reorganizamos el destino de su operación sin tocar el roadmap. La mayoría de los problemas que usted llama de procesos son, en realidad, cuentas que el universo lleva pendientes con su comité directivo.",
+    deliverables: [
+      "Diagnóstico preliminar de fricción cósmica",
+      "Alineación de stakeholders cósmicos",
+      "Protocolo de cierre de ciclos abiertos",
+    ],
+  },
+  {
+    title: "Transformación Digital del Alma",
+    description:
+      "Acompañamos a organizaciones que confundieron adoptar una herramienta con resolver una crisis existencial. La inteligencia artificial no le devolverá el sentido; nosotros tampoco, pero al menos se lo decimos de frente.",
+    deliverables: [
+      "Auditoría de promesas tecnológicas incumplidas",
+      "Reencuadre del entusiasmo en expectativas operables",
+      "Hoja de ruta hacia una madurez que no dependa del próximo modelo",
+    ],
+  },
+  {
+    title: "Gestión de Deuda Técnica Espiritual",
+    description:
+      "Su sistema acumula karma en los logs y escribe su destino en los stack traces. Refactorizamos el alma operativa antes de que el pasivo reviente en producción un viernes por la tarde.",
+    deliverables: [
+      "Clasificación de deuda técnica espiritual por severidad",
+      "Plan de pago sin congelar el roadmap del trimestre",
+      "Indicadores de reincidencia kármica",
+    ],
+  },
+];
+
+const FRAMEWORK_AREAS = SERVICE_LINES.map((line) => line.title);
+---
+
+<Layout title="Áreas de Práctica — Bit Gurú">
+  <PageShell accent="burgundy">
+    <Container>
+      <div class="page-content">
+        {/* 1 — HERO */}
+        <EditorialHero
+          eyebrow="Áreas de Práctica"
+          title="Cuatro líneas de servicio para el pasivo que su balance no registra."
+          deck="No cubrimos sectores: cubrimos síntomas. Cada compromiso entra por una de estas cuatro puertas y, sin excepción, termina en el mismo marco diagnóstico. Si llegó hasta aquí, ya sabe con quién trata."
+        />
+
+        {/* 2 — REJILLA DE LÍNEAS DE SERVICIO */}
+        {/* as="h2": introduce las ServiceCard (que usan <h3>); el encabezado
+            real evita el salto de nivel <h1> → <h3> (spec § ACCESSIBILITY). */}
+        <SectionDivider as="h2" label="Líneas de Servicio" />
+        <div class="service-grid">
+          {
+            SERVICE_LINES.map((line) => (
+              <ServiceCard
+                title={line.title}
+                description={line.description}
+                deliverables={line.deliverables}
+              />
+            ))
+          }
+        </div>
+
+        {/* 3 — EL MARCO */}
+        <SectionDivider label="El Marco" />
+        <p class="framework-intro">
+          Las cuatro áreas no son cuatro métodos. Son cuatro entradas a un único
+          marco diagnóstico propietario de veintidós dimensiones. Cualquiera que
+          sea su puerta de ingreso, el diagnóstico preliminar se levanta sobre el
+          mismo instrumento. Y si eso le tranquiliza, créalo.
+        </p>
+        <FrameworkDiagram areas={FRAMEWORK_AREAS} />
+      </div>
+    </Container>
+  </PageShell>
+</Layout>
+
+<style>
+  /* El contenido editorial ocupa el ancho del grid y se alinea a la izquierda.
+     Cada bloque de prosa se autolimita a --measure. Consume SOLO tokens de
+     Layout.astro; cero hex de marca, sin gradiente, sin glow, sin dark mode. */
+  .page-content {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  /* Rejilla de líneas de servicio: dos columnas en desktop, una en móvil.
+     Sin sombra/glow; la estructura la dan los bordes hairline de ServiceCard. */
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+    align-items: start;
+  }
+
+  @media (max-width: 640px) {
+    .service-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Párrafo introductorio del marco: serif de cuerpo, medida de lectura. */
+  .framework-intro {
+    margin: 0 0 var(--space-6);
+    max-width: var(--measure);
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+</style>

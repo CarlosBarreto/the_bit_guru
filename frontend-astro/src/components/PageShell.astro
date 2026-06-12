@@ -1,0 +1,82 @@
+---
+// src/components/PageShell.astro — feature 19 (redesign_page_home).
+// Cascarón de página reusable del rediseño (docs/design/redesign_advisory_spec.md
+// § LAYOUT / ACCESSIBILITY CHECKLIST "Landmarks semánticos: <header>, <nav>,
+// <main>, <footer>. Skip-link al <main>"). Compone los chrome compartidos:
+//   skip-link → <TopNavigation /> (header+nav) → <main id="main"> → <Footer />.
+//
+// El acento de página se fija con la prop opcional `accent`:
+//   - sin `accent`        → <main> SIN data-accent → acento neutro Navy (default
+//                            global de Layout.astro). Es el caso del Inicio.
+//   - accent="burgundy"   → <main data-accent="burgundy"> (remapeo --accent*).
+//   - accent="olive"      → <main data-accent="olive">
+//   - accent="forest"     → <main data-accent="forest">
+// Las páginas siguientes reusan este cascarón pasando su familia de acento.
+//
+// UN solo <main> (landmark único). NO toca Layout.astro: el remapeo de acento ya
+// está definido por [data-accent="..."] en el <style is:global> de Layout.
+// Consume SOLO tokens de Layout.astro (--accent*, --ink*, --paper*, --space-*,
+// --font-*). Cero hex de marca, sin gradiente, sin glow/box-shadow luminosa,
+// sin dark mode, sin emoji.
+import TopNavigation from "./TopNavigation.astro";
+import Footer from "./Footer.astro";
+
+export interface Props {
+  accent?: "burgundy" | "olive" | "forest";
+}
+
+const { accent } = Astro.props;
+---
+
+<a class="skip-link" href="#main">Saltar al contenido</a>
+<TopNavigation />
+<main id="main" data-accent={accent}>
+  <slot />
+</main>
+<Footer />
+
+<style>
+  /* Skip-link accesible (spec § ACCESSIBILITY): oculto hasta recibir foco por
+     teclado, momento en el que aparece arriba a la izquierda. Lleva al <main>.
+     Foco visible con --accent; sin glow. */
+  .skip-link {
+    position: absolute;
+    left: var(--space-4);
+    top: -10rem;
+    z-index: 200;
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--paper-pure);
+    background: var(--ink-deep);
+    border: 1px solid var(--ink-deep);
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-5);
+    text-decoration: none;
+    transition: top 150ms ease-out;
+  }
+
+  .skip-link:focus {
+    top: var(--space-4);
+  }
+
+  .skip-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* El <main> recibe el foco programático tras activar el skip-link sin agregar
+     un borde de tabulación permanente (tabindex="-1" no aplica aquí; el ancla
+     #main lo enfoca de forma nativa). Espacio vertical de página. */
+  main {
+    display: block;
+    padding-block: var(--space-9);
+    text-align: left;
+  }
+
+  @media (max-width: 640px) {
+    main {
+      padding-block: var(--space-8);
+    }
+  }
+</style>

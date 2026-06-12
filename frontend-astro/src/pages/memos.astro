@@ -1,0 +1,127 @@
+---
+// src/pages/memos.astro — feature 22 (redesign_page_memos, Phase 4).
+// Memos Trimestrales (docs/design/redesign_advisory_spec.md § PAGE-BY-PAGE
+// "/memos" / SITE MAP): acento OLIVE. PageShell deja el remapeo --accent* en el
+// <main data-accent="olive">, así que toda la página usa UNA sola familia de
+// acento (nav/footer siguen Navy porque PageShell los pone fuera del <main>).
+//
+// Estructura: EditorialHero breve → SectionDivider + nota de registro →
+// QuarterlyArchive (índice cronológico por trimestre, lista hairline) de
+// MemoCard. El índice editorial es estático; el CUERPO de cada memorando se
+// hidrata en el navegador desde GET /api/wisdom-tweet (con ?tema= por memo) y
+// los epígrafes opcionales desde GET /api/morpheus-quotes, vía
+// utils/memos-client.ts. Los endpoints NO se modifican: solo se consumen.
+//
+// Registro consultora (usted, deadpan, español canónico, PERSONA §4 + spec
+// § VOICE & COPY). Sin gradiente, sin glow, sin dark mode, sin emoji, sin
+// hype, sin lorem. Todo a la izquierda.
+import Layout from "../layouts/Layout.astro";
+import PageShell from "../components/PageShell.astro";
+import Container from "../components/Container.astro";
+import EditorialHero from "../components/EditorialHero.astro";
+import SectionDivider from "../components/SectionDivider.astro";
+import Prose from "../components/Prose.astro";
+import QuarterlyArchive from "../components/QuarterlyArchive.astro";
+import type { MemoEntry } from "../utils/memos-client";
+
+// Índice oficial de memorandos: más reciente primero, agrupables por
+// trimestre. El `tema` alimenta el ?tema= de /api/wisdom-tweet; el primer
+// memorando de cada trimestre abre con epígrafe (withEpigraph).
+const MEMOS: MemoEntry[] = [
+  {
+    number: "BG/M-014",
+    title: "Sobre la productividad como pasivo espiritual",
+    quarter: "T2 2026",
+    date: "2026-05-12",
+    tema: "la productividad tóxica",
+    withEpigraph: true,
+  },
+  {
+    number: "BG/M-013",
+    title: "Inteligencia artificial: diligencia preliminar",
+    quarter: "T2 2026",
+    date: "2026-04-06",
+    tema: "la inteligencia artificial",
+  },
+  {
+    number: "BG/M-012",
+    title: "Redes sociales: rendimiento kármico de la exposición",
+    quarter: "T1 2026",
+    date: "2026-02-17",
+    tema: "las redes sociales",
+    withEpigraph: true,
+  },
+  {
+    number: "BG/M-011",
+    title: "La deuda técnica del alma: tratamiento contable",
+    quarter: "T1 2026",
+    date: "2026-01-20",
+    tema: "la deuda técnica",
+  },
+  {
+    number: "BG/M-010",
+    title: "Activos digitales en líneas temporales adversas",
+    quarter: "T4 2025",
+    date: "2025-11-25",
+    tema: "las criptomonedas",
+    withEpigraph: true,
+  },
+  {
+    number: "BG/M-009",
+    title: "Las juntas recurrentes y otros ciclos sin salida",
+    quarter: "T4 2025",
+    date: "2025-10-07",
+    tema: "las juntas de trabajo",
+  },
+];
+---
+
+<Layout title="Memos Trimestrales — Bit Gurú">
+  <PageShell accent="olive">
+    <Container>
+      <div class="page-content">
+        <EditorialHero
+          eyebrow="Memos Trimestrales"
+          title="Memorandos de la Firma"
+          deck="Cada trimestre, el Socio Fundador emite una serie de memorandos con las conclusiones del Oráculo sobre la economía digital y sus participantes. Se distribuyen sin costo. El costo viene después."
+        />
+
+        <SectionDivider label="Índice Cronológico" />
+
+        <Prose class="archive-note">
+          <p>
+            El índice se ordena del trimestre más reciente al más antiguo. Cada
+            memorando se redacta en el momento exacto de su consulta: el
+            Oráculo considera que archivar opiniones equivale a heredarle
+            pasivos al área de cumplimiento. Hoy las cartas indican que usted
+            leerá al menos uno completo, y si eso le tranquiliza, créalo.
+          </p>
+        </Prose>
+
+        <QuarterlyArchive memos={MEMOS} />
+      </div>
+    </Container>
+  </PageShell>
+</Layout>
+
+<script>
+  // Hidratación de los memorandos: GET /api/wisdom-tweet por tarjeta (con su
+  // tema) + epígrafes opcionales de GET /api/morpheus-quotes. Solo lectura.
+  import { hydrateMemoCards } from "../utils/memos-client";
+
+  void hydrateMemoCards(document);
+</script>
+
+<style>
+  /* El contenido editorial ocupa el ancho del grid y se alinea a la izquierda.
+     Consume SOLO tokens de Layout.astro; cero hex de marca, sin sombra ni
+     efecto prohibido, sin dark mode. */
+  .page-content {
+    grid-column: 1 / -1;
+    text-align: left;
+  }
+
+  .page-content :global(.archive-note) {
+    margin-bottom: var(--space-7);
+  }
+</style>

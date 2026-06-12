@@ -1,0 +1,180 @@
+---
+// src/components/EngagementCard.astro — feature 23 (redesign_page_archivo).
+// Tarjeta de caso del Archivo de Compromisos (docs/design/redesign_advisory_spec.md
+// § REQUIRED COMPONENTS "EngagementCard" / PAGE-BY-PAGE "/archivo"). Variante de
+// la tarjeta editorial (familia InsightCard / CaseStudyCard): sector ficticio
+// (eyebrow mono) + título de caso serif (<h3>) + métrica destacada (valor mono +
+// etiqueta sans). Cada caso "abre a" su cuadro de resultados mediante un
+// <details>/<summary> NATIVO: sin JS, accesible, el contenido vive estático en el
+// DOM (no se inyecta), así la página funciona sin scripts.
+//
+// El ENCABEZADO del caso (eyebrow + h3 + métrica) va FUERA del <summary> para no
+// aplanar la jerarquía del <h3> dentro del contenido del summary. El <summary>
+// solo dispara la tabla ("Resultados del compromiso").
+//
+// Borde hairline 1px var(--ink-rule) + filete superior de acento, igual que el
+// resto de tarjetas editoriales. NO fija familia de acento (usa --accent, que la
+// página remapea con <main data-accent>). Consume SOLO tokens de Layout.astro.
+// Cero hex de marca, sin gradiente, sin glow/box-shadow luminosa, sin dark mode,
+// sin emoji. Alineado a la IZQUIERDA. Registro consultora (usted, deadpan).
+export interface Props {
+  // Sector ficticio absurdo (PERSONA §5) — eyebrow mono. Ej. "DAO en duelo".
+  sector: string;
+  // Título del caso — <h3> serif.
+  title: string;
+  // Métrica destacada: valor (mono) + etiqueta (sans).
+  metricValue: string;
+  metricLabel: string;
+  // Texto del summary; por defecto el rótulo canónico del archivo.
+  disclosureLabel?: string;
+}
+
+const {
+  sector,
+  title,
+  metricValue,
+  metricLabel,
+  disclosureLabel = "Resultados del compromiso",
+} = Astro.props;
+---
+
+<article class="engagement-card">
+  {/* Encabezado del caso FUERA del summary: preserva el <h3> real. */}
+  <header class="case-header">
+    <p class="sector">{sector}</p>
+    <h3 class="title">{title}</h3>
+    <p class="headline-metric">
+      <span class="metric-value">{metricValue}</span>
+      <span class="metric-label">{metricLabel}</span>
+    </p>
+  </header>
+
+  {/* Disclosure NATIVO: contenido estático en el DOM, sin JS. */}
+  <details class="disclosure">
+    <summary class="summary">
+      {/* Indicador del estado de apertura, accesiblemente oculto (el marcador
+          nativo se reemplaza por este +/- vía CSS). El texto lo lee todo. */}
+      <span class="marker" aria-hidden="true"></span>
+      <span class="summary-text">{disclosureLabel}</span>
+    </summary>
+    <div class="disclosure-body">
+      <slot />
+    </div>
+  </details>
+</article>
+
+<style>
+  /* Tarjeta editorial: borde hairline 1px var(--ink-rule) + filete superior de
+     acento. Sin sombra/glow. Esquinas casi rectas (--radius). Izquierda. */
+  .engagement-card {
+    border: 1px solid var(--ink-rule);
+    border-top: 2px solid var(--accent);
+    border-radius: var(--radius);
+    padding: var(--space-5);
+    background: var(--paper-pure);
+    text-align: left;
+  }
+
+  .case-header {
+    text-align: left;
+  }
+
+  /* Sector ficticio en mono, MAYÚSCULAS, letter-spacing 0.08em, --accent
+     (spec § TYPOGRAPHY "Eyebrows"). */
+  .sector {
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+
+  /* Título del caso en serif editorial, --step-2 (H3). */
+  .title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    font-size: var(--step-2);
+    line-height: 1.2;
+    color: var(--ink-deep);
+  }
+
+  /* Métrica destacada: valor en mono grande + etiqueta en sans muted. La
+     etiqueta no depende solo del color: tamaño y familia la distinguen. */
+  .headline-metric {
+    margin: var(--space-4) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+
+  .metric-value {
+    font-family: var(--font-mono);
+    font-size: var(--step-3);
+    font-variant-numeric: tabular-nums;
+    color: var(--accent-deep);
+  }
+
+  .metric-label {
+    font-family: var(--font-sans);
+    font-size: var(--step--1);
+    color: var(--ink-muted);
+  }
+
+  /* Disclosure nativo. Separado del encabezado por una hairline superior. */
+  .disclosure {
+    margin-top: var(--space-5);
+    border-top: 1px solid var(--ink-rule);
+    padding-top: var(--space-4);
+  }
+
+  /* Reemplazo accesible del marcador nativo: ocultamos el triángulo del UA y
+     pintamos un +/- propio en --accent. El indicador es aria-hidden; el texto
+     del summary comunica la acción. */
+  .summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--ink-deep);
+  }
+
+  /* Quita el disclosure-triangle de WebKit/Safari. */
+  .summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Indicador +/- propio (estructura, no solo color). */
+  .marker {
+    font-family: var(--font-mono);
+    color: var(--accent);
+    width: 1ch;
+    flex: none;
+  }
+
+  .marker::before {
+    content: "+";
+  }
+
+  .disclosure[open] .marker::before {
+    content: "\2212"; /* signo menos tipográfico */
+  }
+
+  /* Foco visible por teclado en el summary (spec § ACCESSIBILITY). */
+  .summary:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .disclosure-body {
+    margin-top: var(--space-4);
+    text-align: left;
+  }
+</style>

@@ -1,0 +1,108 @@
+---
+// src/components/EditorialHero.astro — feature 17 (redesign_editorial_components_a).
+// Hero editorial del rediseño (docs/design/redesign_advisory_spec.md
+// § REQUIRED COMPONENTS / TYPOGRAPHY / LAYOUT): eyebrow mono opcional + H1 serif
+// (display) + deck opcional + un CTA opcional. Alineado a la IZQUIERDA, SIN
+// imagen de fondo, sin centrado. Registro consultora (usted, deadpan).
+// Consume SOLO tokens de Layout.astro (--accent*, --ink*, --paper*, --space-*,
+// --step-*, --font-*, --radius, --measure). Cero hex de marca, sin gradiente,
+// sin glow/box-shadow luminosa, sin dark mode, sin emoji.
+//
+// Reusable: NO fija familia de acento. Usa --accent, que la página remapea con
+// <body data-accent="...">. El CTA se omite del DOM cuando no hay `ctaHref`.
+export interface Props {
+  eyebrow?: string;
+  title: string;
+  deck?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+const { eyebrow, title, deck, ctaLabel, ctaHref } = Astro.props;
+const ctaText = ctaLabel ?? "Solicitar evaluación preliminar";
+---
+
+<section class="editorial-hero">
+  {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+  <h1 class="title">{title}</h1>
+  {deck && <p class="deck">{deck}</p>}
+  {
+    ctaHref && (
+      <p class="cta-row">
+        <a class="cta" href={ctaHref}>
+          {ctaText}
+        </a>
+      </p>
+    )
+  }
+</section>
+
+<style>
+  .editorial-hero {
+    text-align: left;
+    max-width: var(--measure);
+    margin-inline: 0;
+  }
+
+  /* Eyebrow en mono, MAYÚSCULAS, letter-spacing 0.08em, color --accent
+     (spec § TYPOGRAPHY "Eyebrows"). */
+  .eyebrow {
+    margin: 0 0 var(--space-4);
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+
+  /* H1 display en serif editorial, clamp aprox --step-4 → --step-5
+     (spec § TYPOGRAPHY escala). line-height de headline 1.2. */
+  .title {
+    margin: 0;
+    font-family: var(--font-serif);
+    font-weight: 700;
+    font-size: clamp(var(--step-4), 5vw, var(--step-5));
+    line-height: 1.2;
+    color: var(--ink-deep);
+  }
+
+  /* Deck / subtítulo: --step-1, color --ink-muted, medida de lectura. */
+  .deck {
+    margin: var(--space-5) 0 0;
+    font-family: var(--font-serif);
+    font-size: var(--step-1);
+    line-height: 1.6;
+    color: var(--ink-muted);
+  }
+
+  .cta-row {
+    margin: var(--space-6) 0 0;
+  }
+
+  /* CTA sobrio: botón de borde recto (--radius), foco visible. Color portado por
+     --accent; el texto no depende solo del color (borde + peso). Sin glow. */
+  .cta {
+    display: inline-block;
+    font-family: var(--font-sans);
+    font-size: var(--step-0);
+    font-weight: 600;
+    color: var(--paper-pure);
+    background: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius);
+    padding: var(--space-3) var(--space-5);
+    text-decoration: none;
+    transition: background-color 150ms ease-out, border-color 150ms ease-out;
+  }
+
+  .cta:hover {
+    background: var(--accent-bright);
+    border-color: var(--accent-bright);
+  }
+
+  .cta:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+</style>
