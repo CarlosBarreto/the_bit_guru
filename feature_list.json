@@ -350,7 +350,7 @@
         "tests/ valida render de la pagina",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 25,
@@ -365,7 +365,7 @@
         "tests/ mockea el POST y valida estados de exito/error y accesibilidad del form",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     },
     {
       "id": 26,

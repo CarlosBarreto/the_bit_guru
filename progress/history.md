@@ -213,3 +213,29 @@ Plantilla de entrada (copiar al cerrar sesión):
 - **Archivos tocados:** `frontend-astro/src/components/OutcomeMetricsTable.astro` (nuevo), `frontend-astro/src/components/EngagementCard.astro` (nuevo), `frontend-astro/src/pages/archivo.astro` (nuevo), `frontend-astro/tests/components/outcome-metrics-table.test.ts` (nuevo), `frontend-astro/tests/components/engagement-card.test.ts` (nuevo), `frontend-astro/tests/pages/archivo.test.ts` (nuevo).
 - **Deuda no bloqueante:** `CaseStudyCard` lo nombra el plan/spec pero NUNCA se creó como componente; EngagementCard se modeló sobre InsightCard (decisión correcta confirmada por el reviewer). Si la spec quiere CaseStudyCard como componente propio, es una feature futura.
 - **Notas para la próxima sesión:** Alcance acotado a `/archivo` + 2 componentes + 3 tests. Siguiente pending = feature 24 `/la-firma` (acento Forest). Roadmap restante: 24 `/la-firma` (Forest), 25 `/admision` (Olive, IntakeForm con POST /api/reading|/api/pregunta), 26 auditorías + limpieza UI neón. **Antes de la 26:** crear tag `v0.2-mystic-cyber` para preservar la UI neón antes de borrarla (regla "borrar con cuidado").
+
+---
+
+## Sesión 2026-06-11 — feature #24 redesign_page_la_firma (`/la-firma`, Forest) — DONE
+
+- **Rol:** leader (orquestó implementer + reviewer).
+- **Arranque:** init.ps1 verde (451 tests / 41 files). Estado previo: 23 done, 3 pending (24,25,26).
+- **Trabajo:** implementer creó `src/pages/la-firma.astro` (PageShell accent="forest", EditorialHero, historia institucional con lore PERSONA §2 reencuadrado respetando las reglas de misterio, PartnerBiographyBlock no-facial del Socio Fundador, principios en PullQuote) + `tests/pages/la-firma.test.ts` (patrón doble Container API + readFileSync; +13 tests, incl. ancla anti-spoiler del backstory).
+- **Review:** reviewer APPROVED (`progress/review_24.md`). C1–C5 verdes. Acceptance #24 cumplido; nota: `data-accent` va en `<main>` vía PageShell (patrón canónico features 19–23), no en `<body>`.
+- **Verificación final:** `.\init.ps1` exit 0 · `npm test` 464/464 verdes (42 files).
+- **Cierre:** #24 → done en feature_list.json. Quedan 2 pending: #25 `/admision` (IntakeForm + Confirmation/Error, acento Olive) y #26 Phase 5 auditorías a11y/motion/palette + limpieza UI neón obsoleta.
+- **Detalle:** `progress/impl_24.md`, `progress/review_24.md`.
+
+---
+
+## Sesión 2026-06-11 — feature #25 redesign_page_admision (`/admision`, Olive) — DONE
+
+- **Rol:** leader (orquestó implementer + reviewer; subagentes custom no registrados en la sesión → ejecutados como `general-purpose` con su rol inyectado).
+- **Arranque:** `init.ps1` verde (451→ baseline real 464 tests / 42 files). Estado previo: 24 done, 2 pending (25, 26).
+- **Trabajo (implementer):** 4 archivos nuevos — `src/utils/admision-client.ts` (cliente de I/O con `fetch` inyectable + microcopy como única fuente de verdad, réplica del patrón de `memos-client.ts` feature 22), `src/components/IntakeForm.astro` (formulario accesible: label↔campo, `aria-describedby`/`aria-invalid`/`aria-required`, foco visible, ConfirmationState `role=status`, ErrorState `role=alert`, estado de carga; progresivo: `<form method=post action=/api/reading novalidate>` funciona sin JS), `src/pages/admision.astro` (PageShell accent="olive", EditorialHero + SectionDivider + Prose + IntakeForm) y 2 tests. **Cableado de AMBOS endpoints vía selector**: Diagnóstico preliminar → POST `/api/reading` (3 arcanos + interpretación, default), Consulta al Socio → POST `/api/pregunta`. Endpoints SOLO consumidos por HTTP, no modificados.
+- **Review:** reviewer APPROVED (`progress/review_25.md`), C1–C5 verdes, sin cambios requeridos. Perímetro verificado con git: `git diff` del frontend trackeado vacío → `lib/`, `pages/api/*`, `Layout.astro`, `PageShell.astro` intactos. Acceptance #25 cumplido punto por punto; acento en `<main>` vía PageShell (patrón canónico 19–24).
+- **Verificación final:** `.\init.ps1` exit 0 · `npm test` **508/508 verdes (44 files)** (baseline 464 → +44 tests, +2 files) · `npm run build` verde (server + adapter Vercel).
+- **Cierre:** #25 → done en feature_list.json. **25/26 features done; queda 1 pending: #26** (Phase 5 — auditorías a11y/motion/palette + limpieza UI neón obsoleta).
+- **Pendiente de dueño (no bloqueante):** smoke manual del flujo IntakeForm contra Gemini real (`GEMINI_API_KEY`, `npm run dev`) — `docs/verification.md` §3; esta feature solo consume los endpoints, no los toca.
+- **Recordatorio para #26:** antes de borrar la UI neón, crear tag `v0.2-mystic-cyber` para preservarla (regla "borrar con cuidado").
+- **Detalle:** `progress/impl_25.md`, `progress/review_25.md`.
