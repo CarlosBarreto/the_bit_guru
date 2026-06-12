@@ -239,3 +239,18 @@ Plantilla de entrada (copiar al cerrar sesión):
 - **Pendiente de dueño (no bloqueante):** smoke manual del flujo IntakeForm contra Gemini real (`GEMINI_API_KEY`, `npm run dev`) — `docs/verification.md` §3; esta feature solo consume los endpoints, no los toca.
 - **Recordatorio para #26:** antes de borrar la UI neón, crear tag `v0.2-mystic-cyber` para preservarla (regla "borrar con cuidado").
 - **Detalle:** `progress/impl_25.md`, `progress/review_25.md`.
+
+---
+
+## Sesión 2026-06-11 — feature #26 redesign_audits_cleanup (Phase 5) — DONE · **HITO: 26/26**
+
+- **Rol:** leader (orquestó la feature dividida en 2 sub-tareas, cada una implementer + reviewer).
+- **Preparación (candado "borrar con cuidado"):** se commitearon primero las features 24 (`74ee30e`) y 25 (`9a8086d`), que estaban sin commitear, y se creó el **tag de preservación `v0.2-mystic-cyber` → 9a8086d** (último estado con UI neón completa + editorial). La UI neón queda recuperable; el borrado es seguro.
+- **Verificación de borrado (leader, read-only):** grafo de dependencias confirmado — los 5 componentes neón sin importadores, `utils/api.js` solo usado por páginas neón, `nav-links.ts` ya sin rutas neón. Lista de 17 archivos huérfanos.
+- **Sub-tarea A (limpieza):** implementer borró con `git rm` 17 archivos (6 páginas `hoy/mini-oraculo/oraculo/quejas/sobre/zoltar`, 5 componentes `Hero/TarotSection/Consulta/Sabiduria/Nav`, sus 5 tests, `utils/api.js`). Cero referencias colgantes (verificado pre y post; `foundation.test.ts`/`smoke.test.ts` solo mencionan los nombres en comentarios). Tests 39 files / 471 verdes, build verde. Reviewer APPROVED (`review_26a_cleanup.md`).
+- **Sub-tarea B (auditorías):** implementer materializó las 3 auditorías como test transversal `tests/audits/site-audit.test.ts` (+61 casos) sobre las 7 páginas + chrome: WCAG AA (landmarks, 1×h1, jerarquía sin saltos, foco, formularios, skip-link, contraste de tokens recalculado ≥4.5:1), motion (sin parallax/typewriter/keyframes/glow; `prefers-reduced-motion` apaga todo), palette (cero hex fuera de tokens, 1 familia de acento por página, sin gradiente/glow/dark-mode/CDN/emoji). **1 violación real corregida:** salto de encabezado h1→h3 en `/`, `/practica`, `/archivo` → se añadió prop opcional `as` a `SectionDivider` para renderizar el divisor introductorio como `<h2>` real (retrocompatible, **cero cambio visual**). Reviewer APPROVED (`review_26b_audits.md`).
+- **Verificación final (leader):** `.\init.ps1` exit 0 · `npm test` **532/532 verdes (40 files)** · `npm run build` verde.
+- **Cierre:** #26 → done. **Estado del proyecto: 26/26 features done — rediseño editorial "Bit Gurú & Asociados" COMPLETO. Phase 5 cerrada.**
+- **Perímetro:** los 7 endpoints `src/pages/api/*` y `src/lib/` nunca se tocaron en todo el rediseño (era de presentación).
+- **Pendiente de dueño (no bloqueante):** smoke visual del preview Vercel del site map final; decisión de merge `feat/migrate-to-vercel` → `main`; re-activar Deployment Protection; smoke con `GEMINI_API_KEY` real del flujo IntakeForm (`/admision`).
+- **Detalle:** `progress/impl_26a_cleanup.md`, `progress/review_26a_cleanup.md`, `progress/impl_26b_audits.md`, `progress/review_26b_audits.md`, `progress/audit_26.md`.

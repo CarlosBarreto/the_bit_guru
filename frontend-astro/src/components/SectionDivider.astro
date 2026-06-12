@@ -8,16 +8,38 @@
 //
 // Uso: <SectionDivider label="Áreas de Práctica" /> o <SectionDivider /> (solo
 // el filete). El eyebrow se omite del DOM cuando no hay label.
+//
+// Accesibilidad (spec § ACCESSIBILITY "jerarquía de encabezados ... sin saltos
+// de nivel"): cuando este divisor INTRODUCE una sección cuyo contenido usa
+// encabezados (p. ej. una rejilla de tarjetas con <h3>), el label debe ser un
+// encabezado REAL para no saltar de <h1> a <h3>. Para eso se pasa `as="h2"`
+// (o el nivel que corresponda): el label se renderiza dentro de ese encabezado
+// conservando el tratamiento visual de eyebrow, y el contenedor deja de ser
+// role="separator" (un encabezado no es un separador). Por defecto (`as`
+// ausente) se conserva el comportamiento previo: <div role="separator"> con el
+// label en un <span class="eyebrow">.
 export interface Props {
   label?: string;
   class?: string;
+  as?: "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
-const { label, class: className } = Astro.props;
+const { label, class: className, as } = Astro.props;
+const Heading = as;
 ---
 
-<div class:list={["section-divider", className]} role="separator">
-  {label && <span class="eyebrow">{label}</span>}
+<div
+  class:list={["section-divider", className]}
+  role={as ? undefined : "separator"}
+>
+  {
+    label &&
+      (Heading ? (
+        <Heading class="eyebrow">{label}</Heading>
+      ) : (
+        <span class="eyebrow">{label}</span>
+      ))
+  }
 </div>
 
 <style>
@@ -28,8 +50,12 @@ const { label, class: className } = Astro.props;
     text-align: left;
   }
 
+  /* El eyebrow mantiene el mismo tratamiento visual tanto si es <span> como si
+     es un encabezado real (as="h2"...): mono, mayúsculas, --accent. Se anula el
+     margen propio de los encabezados para preservar el ritmo del divisor. */
   .eyebrow {
     display: block;
+    margin: 0;
     font-family: var(--font-mono);
     font-size: var(--step--1);
     font-weight: 500;

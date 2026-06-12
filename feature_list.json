@@ -380,7 +380,7 @@
         "Se cumplen todos los ACCEPTANCE CRITERIA y la DEFINITION OF DONE de la spec",
         "init.ps1 verde y npm test pasa"
       ],
-      "status": "pending"
+      "status": "done"
     }
   ]
 }

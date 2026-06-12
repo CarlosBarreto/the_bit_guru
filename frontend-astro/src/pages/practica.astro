@@ -87,7 +87,9 @@ const FRAMEWORK_AREAS = SERVICE_LINES.map((line) => line.title);
         />
 
         {/* 2 — REJILLA DE LÍNEAS DE SERVICIO */}
-        <SectionDivider label="Líneas de Servicio" />
+        {/* as="h2": introduce las ServiceCard (que usan <h3>); el encabezado
+            real evita el salto de nivel <h1> → <h3> (spec § ACCESSIBILITY). */}
+        <SectionDivider as="h2" label="Líneas de Servicio" />
         <div class="service-grid">
           {
             SERVICE_LINES.map((line) => (

@@ -107,7 +107,9 @@ const FEATURED_INSIGHTS = [
         </Prose>
 
         {/* 3 — FEATURED INSIGHTS (exactamente 3) */}
-        <SectionDivider label="Memos Destacados" />
+        {/* as="h2": introduce las 3 InsightCard (que usan <h3>); el encabezado
+            real evita el salto de nivel <h1> → <h3> (spec § ACCESSIBILITY). */}
+        <SectionDivider as="h2" label="Memos Destacados" />
         <div class="insights-grid">
           {
             FEATURED_INSIGHTS.map((memo) => (

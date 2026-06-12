@@ -92,7 +92,9 @@ const ENGAGEMENTS = [
         />
 
         {/* 2 — NOTA DEL ARCHIVO */}
-        <SectionDivider label="Casos Seleccionados" />
+        {/* as="h2": introduce las EngagementCard (que usan <h3>); el encabezado
+            real evita el salto de nivel <h1> → <h3> (spec § ACCESSIBILITY). */}
+        <SectionDivider as="h2" label="Casos Seleccionados" />
         <Prose as="section" class="archive-note">
           <p>
             Los nombres se omiten por discreción y porque, en varios casos, la
